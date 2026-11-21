@@ -142,6 +142,22 @@
   }
   .mensaje.bien { color: var(--verde); font-size: 1.5rem; font-weight: 700; }
   .mensaje.mal { color: var(--rojo); font-size: 1.5rem; font-weight: 700; }
+  .mensaje.pista-arrastre { color: var(--azul); font-size: 1.125rem; font-weight: 700; }
+  /* Explicación de un error con letras que suenan igual o con el acento */
+  .mensaje.explica {
+    color: var(--texto);
+    background: #FFF3E0;
+    border: 2px solid var(--naranja);
+    border-radius: 16px;
+    padding: 10px 14px;
+    font-size: 1.05rem;
+    line-height: 1.35;
+    max-width: 34ch;
+    text-align: left;
+    gap: 10px;
+  }
+  .mensaje.explica::before { content: '💡'; font-family: var(--emoji); font-size: 1.5rem; }
+  .mensaje.explica b { color: var(--rojo); }
 
   .fichas { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; max-width: 360px; }
   .ficha, .tarjeta-palabra {
@@ -162,6 +178,7 @@
     box-shadow: 0 3px 6px rgba(0, 0, 0, .25);
   }
   .ficha.nueva { animation: aparecer .3s backwards; }
+  .ficha.sacudir { animation: sacudir .4s; }
   .ficha.colocada { visibility: hidden; }
   .ficha:disabled { color: white; }
   .arrastrando { z-index: 10; cursor: grabbing; box-shadow: 0 10px 22px rgba(0, 0, 0, .3); }
@@ -300,11 +317,15 @@ const PALABRAS = [
   ['elefante', '🐘'], ['mariposa', '🦋'], ['paraguas', '☂️'], ['castillo', '🏰'], ['guitarra', '🎸'],
 ].map(([texto, figura]) => ({ texto: texto.normalize('NFC'), figura }));
 
-/** Las tres dificultades: letras de más junto a las de la palabra, y entre cuántos dibujos buscar. */
+/**
+ * Las tres dificultades: letras de más junto a las de la palabra (de ellas, cuántas «parecidas»:
+ * suenan igual a una de la palabra, como la B en «vaca», o son la misma vocal sin acento),
+ * y entre cuántos dibujos buscar.
+ */
 const DIFICULTADES = [
-  { nombre: 'Fácil', extra: 3, dibujos: 3, color: 'var(--verde)' },
-  { nombre: 'Medio', extra: 4, dibujos: 4, color: 'var(--naranja)' },
-  { nombre: 'Difícil', extra: 5, dibujos: 6, color: 'var(--morado)' },
+  { nombre: 'Fácil', extra: 3, parecidas: 1, dibujos: 3, color: 'var(--verde)' },
+  { nombre: 'Medio', extra: 4, parecidas: 2, dibujos: 4, color: 'var(--naranja)' },
+  { nombre: 'Difícil', extra: 5, parecidas: 3, dibujos: 6, color: 'var(--morado)' },
 ];
 
 const PALABRAS_POR_PARTIDA = 10;
@@ -313,8 +334,8 @@ const PALABRAS_POR_PARTIDA = 10;
 const LETRAS_EXTRA = [...'ABCDEFGIJLMNÑOPQRSTUVYZ'];
 
 /**
- * Letras que suenan igual o casi igual. Si la palabra tiene una, sus parecidas no salen de más,
- * para que el niño no tenga que adivinar entre dos letras que se oyen igual (B y V en «vaca»).
+ * Letras que suenan igual o casi igual. Las letras de relleno al azar nunca son parecidas a las de
+ * la palabra: las parecidas solo entran a propósito (ver parecidasDe), y cada una tiene su explicación.
  */
 const SUENA_COMO = {
   B: 'V', V: 'B',
@@ -322,6 +343,14 @@ const SUENA_COMO = {
   G: 'J', J: 'G',
   L: 'Y', Y: 'LI', I: 'Y',
   'Á': 'A', 'É': 'E', 'Í': 'IY', 'Ó': 'O', 'Ú': 'U',
+};
+
+const SIN_ACENTO = { 'Á': 'A', 'É': 'E', 'Í': 'I', 'Ó': 'O', 'Ú': 'U' };
+
+/** Cómo se dicen las letras en voz alta (en México). */
+const NOMBRE_LETRA = {
+  B: 'be grande', V: 've chica', S: 'ese', Z: 'zeta', C: 'ce', K: 'ka', Q: 'cu',
+  G: 'ge', J: 'jota', M: 'eme', N: 'ene',
 };
 
 const COLORES_FICHAS = ['#1E88E5', '#3949AB', '#00897B', '#D81B60', '#8E24AA', '#6D4C41'];
@@ -432,14 +461,111 @@ let pantalla = 'menu'; // 'menu' | 'juego' | 'fin'
 let partida = null;
 let temporizador = null;
 
-/** Las fichas de una palabra: sus letras más `extra` letras distintas, todas revueltas. */
-function crearFichas(letras, extra) {
-  const prohibidas = new Set(letras);
+/** ¿La letra en la posición i suena «suave» (CE, CI, GE, GI)? */
+const esSuave = (letras, i) => 'EIÉÍ'.includes(letras[i + 1] || '');
+
+/**
+ * Letras que confunden con las de la palabra, con su prioridad (0 = primero):
+ *   0  la vocal sin acento (ó → o en «león») y la N por la Ñ (como el acento, la tilde cambia la letra)
+ *   1  suena igual: B/V, S/Z/C (ce, ci), G/J (ge, gi), N por M antes de B o P
+ *   2  C/K/Q (ca, co, cu, que, qui)
+ * Ninguna es una letra que ya esté en la palabra.
+ */
+function parecidasDe(letras) {
+  const salida = new Map();
+  const agregar = (l, prioridad) => {
+    if (letras.includes(l)) return;
+    if (!salida.has(l) || salida.get(l) > prioridad) salida.set(l, prioridad);
+  };
+  letras.forEach((l, i) => {
+    const suave = esSuave(letras, i);
+    const sig = letras[i + 1] || '';
+    if (SIN_ACENTO[l]) agregar(SIN_ACENTO[l], 0);
+    else if (l === 'Ñ') agregar('N', 0);
+    else if (l === 'B') agregar('V', 1);
+    else if (l === 'V') agregar('B', 1);
+    else if (l === 'S') { agregar('Z', 1); if (suave) agregar('C', 1); }
+    else if (l === 'Z') { agregar('S', 1); if (suave) agregar('C', 1); }
+    else if (l === 'C' && sig !== 'H') {
+      if (suave) { agregar('S', 1); agregar('Z', 1); } else { agregar('K', 2); agregar('Q', 2); }
+    }
+    else if (l === 'Q') { agregar('K', 2); agregar('C', 2); }
+    else if (l === 'G' && suave) agregar('J', 1);
+    else if (l === 'J' && suave) agregar('G', 1);
+    else if (l === 'M' && 'BP'.includes(sig)) agregar('N', 1);
+  });
+  return salida;
+}
+
+/**
+ * Las fichas de una palabra: sus letras más `extra` letras de más, todas revueltas.
+ * De las de más, hasta `cuantasParecidas` confunden a propósito (ver parecidasDe);
+ * el resto son letras al azar que no se parecen a ninguna de la palabra.
+ */
+function crearFichas(letras, extra, cuantasParecidas) {
+  const candidatas = [...parecidasDe(letras)];
+  const ordenadas = [0, 1, 2].flatMap((pr) => revolver(candidatas.filter(([, p]) => p === pr).map(([l]) => l)));
+  const parecidas = ordenadas.slice(0, Math.min(cuantasParecidas, extra));
+  // El relleno al azar no trae otras parecidas: así el número de cada nivel se respeta.
+  const prohibidas = new Set([...letras, ...ordenadas]);
   letras.forEach((l) => [...(SUENA_COMO[l] || '')].forEach((x) => prohibidas.add(x)));
-  let candidatas = LETRAS_EXTRA.filter((l) => !prohibidas.has(l));
-  if (candidatas.length < extra) candidatas = LETRAS_EXTRA.filter((l) => !letras.includes(l));
-  const deMas = revolver(candidatas).slice(0, extra);
+  let relleno = LETRAS_EXTRA.filter((l) => !prohibidas.has(l));
+  if (relleno.length < extra - parecidas.length) relleno = LETRAS_EXTRA.filter((l) => !letras.includes(l) && !parecidas.includes(l));
+  const deMas = [...parecidas, ...revolver(relleno).slice(0, extra - parecidas.length)];
   return revolver([...letras, ...deMas]).map((letra, id) => ({ id, letra }));
+}
+
+/**
+ * Si la palabra quedó mal por una letra que suena igual o por el acento, explica qué pasó:
+ * { texto (en pantalla, con <b>), voz (para decirlo) }. Si el error es otro, devuelve null.
+ */
+function explicarError() {
+  const p = partida;
+  const L = p.letras;
+  const palabra = p.palabra.texto;
+  const PAL = mayusculas(palabra);
+  const regla = (e, x, nota) => ({
+    texto: `<b>${PAL}</b> se escribe con <b>${e}</b>, no con ${x}. ${nota}`,
+    voz: `${palabra} se escribe con ${NOMBRE_LETRA[e]}, no con ${NOMBRE_LETRA[x]}. Suenan igual, pero se escriben diferente.`,
+  });
+  for (let i = 0; i < L.length; i++) {
+    const f = p.espacios[i];
+    if (!f || f.letra === L[i]) continue;
+    const e = L[i]; // la que va
+    const x = f.letra; // la que pusieron
+    const suave = esSuave(L, i);
+    if (SIN_ACENTO[e] === x) {
+      return {
+        texto: `<b>${PAL}</b> lleva acento: va <b>${e}</b>, no ${x}.`,
+        voz: `${palabra} lleva acento en la ${SIN_ACENTO[e].toLowerCase()}.`,
+      };
+    }
+    if (SIN_ACENTO[x] === e) {
+      return { texto: `Fíjate dónde va el acento: <b>${PAL}</b>.`, voz: `Fíjate dónde va el acento: ${palabra}.` };
+    }
+    if (e === 'Ñ' && x === 'N') {
+      return {
+        texto: `<b>${PAL}</b> se escribe con <b>Ñ</b>, no con N: la Ñ lleva su rayita.`,
+        voz: `${palabra} se escribe con eñe, no con ene.`,
+      };
+    }
+    if (e === 'N' && x === 'Ñ') {
+      return { texto: `Fíjate dónde va la Ñ: <b>${PAL}</b>.`, voz: `Fíjate dónde va la eñe: ${palabra}.` };
+    }
+    if ('BV'.includes(e) && 'BV'.includes(x)) return regla(e, x, 'La B y la V suenan igual.');
+    const comoS = (l) => 'SZ'.includes(l) || (l === 'C' && suave);
+    if (comoS(e) && comoS(x)) return regla(e, x, 'La S, la Z y la C (en CE y CI) suenan igual.');
+    const comoK = (l) => 'KQ'.includes(l) || (l === 'C' && !suave);
+    if (comoK(e) && comoK(x)) return regla(e, x, 'La C (en CA, CO y CU), la K y la Q suenan igual.');
+    if (suave && 'GJ'.includes(e) && 'GJ'.includes(x)) return regla(e, x, 'La G y la J suenan igual en GE y GI.');
+    if (e === 'M' && x === 'N' && 'BP'.includes(L[i + 1] || '')) {
+      return {
+        texto: `<b>${PAL}</b> se escribe con <b>M</b>: antes de B y de P siempre va M.`,
+        voz: `${palabra} se escribe con eme: antes de be y de pe siempre va eme.`,
+      };
+    }
+  }
+  return null;
 }
 
 /** El dibujo correcto más otros distintos, revueltos. */
@@ -455,11 +581,23 @@ function crearOpciones(palabra, cuantos) {
   return revolver([...otras, palabra]);
 }
 
+/**
+ * Las palabras de una partida: 8 de cada 10 tienen alguna letra que se confunde (B/V, S/Z/C, acento…),
+ * para practicar esas dudas; las otras 2, no.
+ */
+function elegirPalabras() {
+  const tieneParecidas = (p) => parecidasDe([...mayusculas(p.texto)]).size > 0;
+  const con = revolver(PALABRAS.filter(tieneParecidas));
+  const sin = revolver(PALABRAS.filter((p) => !tieneParecidas(p)));
+  const nCon = Math.min(con.length, Math.round(PALABRAS_POR_PARTIDA * 0.8));
+  return revolver([...con.slice(0, nCon), ...sin.slice(0, PALABRAS_POR_PARTIDA - nCon)]);
+}
+
 function nuevaPartida(nivel) {
   partida = {
     nivel,
     dif: DIFICULTADES[nivel],
-    palabras: revolver(PALABRAS).slice(0, PALABRAS_POR_PARTIDA),
+    palabras: elegirPalabras(),
     indice: 0,
     estrellas: 0,
   };
@@ -471,9 +609,10 @@ function prepararPalabra() {
   p.palabra = p.palabras[p.indice];
   p.letras = [...mayusculas(p.palabra.texto)];
   p.fase = 'escribir';
-  p.fichas = crearFichas(p.letras, p.dif.extra);
+  p.fichas = crearFichas(p.letras, p.dif.extra, p.dif.parecidas);
   p.espacios = p.letras.map(() => null); // ficha puesta en cada lugar, o null
   p.revision = 'pendiente'; // 'pendiente' | 'correcta' | 'incorrecta'
+  p.explicacion = null; // por qué quedó mal el último intento (letras que suenan igual, acento)
   p.opciones = crearOpciones(p.palabra, p.dif.dibujos);
   p.descartadas = new Set(); // dibujos elegidos por error
   p.encontrada = false;
@@ -511,17 +650,40 @@ function colocarEn(ficha, i) {
   if (p.espacios.includes(null)) return null;
   if (p.espacios.every((_, j) => esCorrecta(j))) {
     p.revision = 'correcta';
+    p.explicacion = null;
   } else {
     p.revision = 'incorrecta';
     p.errorAlEscribir = true;
+    p.explicacion = explicarError();
   }
   return p.revision;
 }
 
-/** Cuando el niño toca una letra en lugar de arrastrarla: va al primer lugar vacío. */
+/**
+ * Solo con el teclado (Enter sobre una letra): va al primer lugar vacío.
+ * Con el dedo o el mouse hay que arrastrarla; si solo la tocan, se les recuerda.
+ */
 function colocar(ficha) {
   const vacio = partida.espacios.indexOf(null);
   return vacio < 0 ? null : colocarEn(ficha, vacio);
+}
+
+let ultimaPistaHablada = 0;
+
+/** La letra se tocó en lugar de arrastrarla: se mueve un poco y se pide arrastrarla. */
+function pistaArrastrar(boton) {
+  boton.classList.remove('sacudir');
+  void boton.offsetWidth; // reinicia la animación
+  boton.classList.add('sacudir');
+  const m = document.querySelector('.mensaje');
+  if (m && !m.classList.contains('explica')) { // la explicación de un error no se tapa
+    m.className = 'mensaje pista-arrastre';
+    m.textContent = 'Arrastra la letra hasta su lugar ☝️';
+  }
+  if (performance.now() - ultimaPistaHablada > 4000) {
+    ultimaPistaHablada = performance.now();
+    decir('Arrastra la letra hasta su lugar');
+  }
 }
 
 /** Dibuja de nuevo y reacciona al resultado de poner una letra. */
@@ -531,8 +693,9 @@ function avisar(resultado) {
     decir('¡Muy bien!');
     programar(1500, pasarARelacionar);
   } else if (resultado === 'incorrecta') {
-    decir('Inténtalo otra vez');
-    programar(1300, quitarIncorrectas);
+    const ex = partida.explicacion;
+    decir(ex ? ex.voz : 'Inténtalo otra vez');
+    programar(ex ? 2600 : 1300, quitarIncorrectas);
   }
 }
 
@@ -680,9 +843,9 @@ function hacerArrastrable(boton, { alTocar, alSoltar, alMover }) {
   boton.addEventListener('pointerup', (e) => terminar(e, false));
   boton.addEventListener('pointercancel', (e) => terminar(e, true));
 
-  boton.addEventListener('click', () => {
+  boton.addEventListener('click', (e) => {
     if (performance.now() < ignorarClickHasta) return;
-    if (alTocar) alTocar();
+    if (alTocar) alTocar(e);
   });
 }
 
@@ -743,10 +906,13 @@ function vistaMenu() {
   return el('section', { class: 'pantalla' },
     el('div', { class: 'centro' },
       el('h1', { text: 'Escucha y Escribe' }),
-      el('p', { class: 'sub', text: 'Escucha la palabra, arrastra las letras a su lugar y encuentra su dibujo.' }),
+      el('p', { class: 'sub', text: 'Escucha la palabra, arrastra las letras a su lugar y encuentra su dibujo. ¡Cuidado con las letras que suenan igual!' }),
       ...DIFICULTADES.map((d, i) => el('button', { class: 'nivel', style: `--c:${d.color}`, onclick: () => jugar(i) },
         el('span', { class: 'nombre', text: d.nombre }),
-        el('span', { class: 'detalle', text: `${d.extra} letras extra · ${d.dibujos} dibujos` }),
+        el('span', {
+          class: 'detalle',
+          text: `${d.extra} letras extra (${d.parecidas} ${d.parecidas === 1 ? 'parecida' : 'parecidas'}) · ${d.dibujos} dibujos`,
+        }),
       )),
       avisoVoz(),
     ),
@@ -822,11 +988,20 @@ function vistaEscribir() {
     }),
   );
 
-  const [texto, clase] = {
-    pendiente: ['Arrastra cada letra a su lugar', 'mensaje'],
-    correcta: ['¡Muy bien!', 'mensaje bien'],
-    incorrecta: ['Casi… inténtalo otra vez', 'mensaje mal'],
-  }[p.revision];
+  // La explicación de un error se queda a la vista mientras el niño lo corrige.
+  let mensaje;
+  if (p.explicacion && p.revision !== 'correcta') {
+    mensaje = el('p', { class: 'mensaje explica', role: 'status' });
+    mensaje.append(el('span'));
+    mensaje.lastChild.innerHTML = p.explicacion.texto;
+  } else {
+    const [texto, clase] = {
+      pendiente: ['Arrastra cada letra a su lugar', 'mensaje'],
+      correcta: ['¡Muy bien!', 'mensaje bien'],
+      incorrecta: ['Casi… inténtalo otra vez', 'mensaje mal'],
+    }[p.revision];
+    mensaje = el('p', { class: clase, text: texto });
+  }
 
   const fichas = el('div', { class: 'fichas' },
     ...p.fichas.map((f) => {
@@ -842,7 +1017,8 @@ function vistaEscribir() {
         b.tabIndex = -1;
       } else {
         hacerArrastrable(b, {
-          alTocar: () => avisar(colocar(f)),
+          // Un toque no acomoda la letra: hay que arrastrarla. Enter (teclado, e.detail === 0) sí la pone.
+          alTocar: (e) => (e && e.detail === 0 ? avisar(colocar(f)) : pistaArrastrar(b)),
           alMover: (punto) => {
             const i = punto ? espacioEn(punto) : null;
             marcarObjetivo('.espacio', i === null ? null : document.querySelectorAll('.espacio')[i]);
@@ -864,7 +1040,7 @@ function vistaEscribir() {
     el('p', { class: 'pista', text: 'Toca para escuchar otra vez' }),
     avisoVoz(),
     espacios,
-    el('p', { class: clase, text: texto }),
+    mensaje,
     fichas,
   );
 }

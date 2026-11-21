@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fernando D. Hernández · Visión por computadora y aprendizaje profundo</title>
+<meta name="description" content="Investigación en aprendizaje profundo para imágenes médicas: vasos retinales, retinopatía diabética y tumores cerebrales en resonancia magnética. Universidad de Guanajuato.">
+<meta property="og:title" content="Fernando Daniel Hernández Gutiérrez · Investigación">
+<meta property="og:description" content="Aprendizaje profundo eficiente para el análisis de imágenes médicas.">
+<meta property="og:type" content="website">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/estilos.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Fernando Daniel Hernández Gutiérrez",
+  "jobTitle": "Candidato a Doctor en Ingeniería Eléctrica",
+  "affiliation": { "@type": "CollegeOrUniversity", "name": "Universidad de Guanajuato" },
+  "sameAs": ["https://orcid.org/0000-0001-9807-4048", "https://scholar.google.com/citations?user=Qr4X01QAAAAJ", "https://www.researchgate.net/profile/Fernando-Hernandez-Gutierrez"]
+}
+</script>
+</head>
+<body data-pagina="inicio">
+<a class="saltar" href="#contenido">Saltar al contenido</a>
+<div id="barra"></div>
+
+<header class="portada">
+  <div class="ancho">
+    <div>
+      <p class="sobretitulo" id="sobretitulo"></p>
+      <h1 id="nombre"></h1>
+      <p class="lema" id="lema"></p>
+      <div class="botones">
+        <a class="btn prim" href="publicaciones.html">Ver publicaciones →</a>
+        <a class="btn sec" href="contacto.html">Contacto</a>
+      </div>
+      <div class="redes" id="redes"></div>
+    </div>
+    <div class="lienzo" id="lienzo" title="Mueva el cursor para comparar imagen y segmentación">
+      <canvas id="retina" width="880" height="880" role="img" aria-label="Ilustración: fondo de retina y su segmentación de vasos sanguíneos"></canvas>
+      <span class="rotulo r1">Imagen</span><span class="rotulo r2">Segmentación</span>
+    </div>
+  </div>
+</header>
+
+<div class="cifras"><div class="ancho"><div class="rejilla" id="cifras"></div></div></div>
+
+<main id="contenido">
+  <section class="seccion">
+    <div class="ancho dos-col">
+      <div>
+        <div class="cabeza"><div><span class="num">01</span><h2>Sobre mí</h2></div></div>
+        <div class="texto-largo" id="resumen"></div>
+        <a class="mas" href="sobre-mi.html">Más sobre mi trayectoria →</a>
+      </div>
+      <div class="tarjeta perfil-inicio">
+        <div class="foto foto-mini" id="foto"></div>
+        <h4>Intereses</h4>
+        <div class="pildoras" id="intereses"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="ancho">
+      <div class="cabeza">
+        <div><span class="num">02</span><h2>Líneas de investigación</h2></div>
+        <a class="mas" href="investigacion.html">Ver detalle →</a>
+      </div>
+      <div class="lineas-mini" id="lineas-mini"></div>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="ancho">
+      <div class="cabeza">
+        <div><span class="num">03</span><h2>Publicaciones recientes</h2></div>
+        <a class="mas" href="publicaciones.html">Ver todas →</a>
+      </div>
+      <div class="pubs" id="recientes"></div>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="ancho">
+      <div class="cabeza"><div><span class="num">04</span><h2>Noticias</h2></div></div>
+      <ul class="cronologia" id="cronologia"></ul>
+
+      <div class="cta">
+        <div>
+          <h2>¿Le interesa colaborar?</h2>
+          <p>Proyectos conjuntos, dirección de tesis, revisiones o asesoría en aprendizaje profundo.</p>
+        </div>
+        <a class="btn prim" href="contacto.html">Escribirme →</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="pie"></div>
+<script src="assets/js/datos.js"></script>
+<script src="assets/js/sitio.js"></script>
+<script src="assets/js/retina.js"></script>
+</body>
+</html>

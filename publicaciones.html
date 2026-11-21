@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Publicaciones · Fernando D. Hernández</title>
+<meta name="description" content="Artículos, ponencias, tesis y manuscritos de Fernando Daniel Hernández Gutiérrez, con DOI y referencias en BibTeX.">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/estilos.css">
+</head>
+<body data-pagina="publicaciones">
+<a class="saltar" href="#contenido">Saltar al contenido</a>
+<div id="barra"></div>
+
+<header class="cabecera-pagina">
+  <div class="ancho">
+    <p class="sobretitulo">Publicaciones</p>
+    <h1>Artículos, tesis y manuscritos</h1>
+    <p>Use «Citar» para copiar la referencia en BibTeX.</p>
+  </div>
+</header>
+
+<main id="contenido">
+  <section class="seccion primera">
+    <div class="ancho">
+      <div class="cabeza">
+        <div class="controles">
+          <div class="pestanas" id="pestanas" role="group" aria-label="Filtrar por tipo"></div>
+        </div>
+        <input class="buscar" id="buscar" type="search" placeholder="Buscar por título, revista o tema…" aria-label="Buscar publicaciones">
+      </div>
+      <p class="conteo" id="conteo" aria-live="polite"></p>
+      <div class="pubs" id="pubs"></div>
+      <p class="nota" id="perfiles"></p>
+    </div>
+  </section>
+</main>
+
+<div id="pie"></div>
+<script src="assets/js/datos.js"></script>
+<script src="assets/js/sitio.js"></script>
+</body>
+</html>

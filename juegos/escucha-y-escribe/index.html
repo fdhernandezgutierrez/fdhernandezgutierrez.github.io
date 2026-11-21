@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<!--
+  Escucha y Escribe (versión web)
+  © 2026 Fernando Daniel Hernandez Gutierrez <fd.hernandezgutierrez@ugto.mx>
+  Todos los derechos reservados.
+-->
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="author" content="Fernando Daniel Hernandez Gutierrez">
+<meta name="description" content="Juego para aprender a escribir: escucha la palabra, acomoda sus letras y encuentra su dibujo.">
+<meta name="theme-color" content="#FFF8E7">
+<title>Escucha y Escribe</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='12' fill='%23FB8C00'/%3E%3Cg transform='translate(4.2 4.2) scale(.65)'%3E%3Cpath fill='white' d='M3,9v6h4l5,5V4L7,9H3zM16.5,12c0,-1.77 -1.02,-3.29 -2.5,-4.03v8.05c1.48,-0.73 2.5,-2.25 2.5,-4.02zM14,3.23v2.06c2.89,0.86 5,3.54 5,6.71s-2.11,5.85 -5,6.71v2.06c4.01,-0.91 7,-4.49 7,-8.77s-2.99,-7.86 -7,-8.77z'/%3E%3C/g%3E%3C/svg%3E">
+<style>
+  :root {
+    --verde: #43A047;
+    --naranja: #FB8C00;
+    --morado: #8E24AA;
+    --azul: #1E88E5;
+    --rojo: #E53935;
+    --gris: #90A4AE;
+    --fondo: #FFF8E7;
+    --texto: #263238;
+    --emoji: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    background: var(--fondo);
+    color: var(--texto);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  body { -webkit-tap-highlight-color: transparent; }
+  #app { max-width: 520px; margin: 0 auto; }
+  button {
+    font: inherit;
+    color: inherit;
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+  button:disabled { cursor: default; }
+  :focus-visible { outline: 3px solid var(--azul); outline-offset: 3px; }
+
+  .pantalla {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    padding: 8px 16px 12px;
+  }
+  .centro {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  /* ---------- Menú ---------- */
+  h1 { font-size: 2.25rem; font-weight: 900; color: var(--azul); margin: 0 0 8px; }
+  .sub { font-size: 1.125rem; margin: 0 0 32px; max-width: 30ch; }
+  .nivel {
+    width: 100%;
+    height: 96px;
+    margin-bottom: 16px;
+    border-radius: 24px;
+    background: var(--c);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, .15);
+    transition: transform .1s;
+  }
+  .nivel:active { transform: scale(.97); }
+  .nivel .nombre { font-size: 1.875rem; font-weight: 700; }
+  .nivel .detalle { font-size: 1rem; }
+  .aviso { color: var(--rojo); margin: 8px 0 0; max-width: 34ch; }
+  .aviso.cargando { color: var(--gris); }
+  .aviso:empty { display: none; }
+  .creditos { align-self: center; color: var(--gris); font-size: .875rem; padding: 12px; }
+  .creditos:hover { text-decoration: underline; }
+
+  /* ---------- Juego ---------- */
+  .barra { display: flex; align-items: center; justify-content: space-between; min-height: 48px; }
+  .enlace { color: var(--azul); font-size: 1.125rem; padding: 8px 4px; }
+  .avance { font-weight: 700; font-size: 1.125rem; }
+  .estrellas { font-weight: 700; font-size: 1.25rem; padding-right: 8px; }
+
+  .bocina {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: var(--naranja);
+    box-shadow: 0 6px 14px rgba(251, 140, 0, .4);
+    display: grid;
+    place-items: center;
+    transition: transform .1s;
+  }
+  .bocina svg { width: 68px; height: 68px; fill: white; }
+  .bocina:active { transform: scale(.95); }
+  .bocina:disabled { opacity: .5; }
+  .pista { color: var(--gris); margin: 8px 0 0; }
+
+  .espacios {
+    display: grid;
+    grid-template-columns: repeat(var(--n), minmax(0, 64px));
+    gap: 8px;
+    justify-content: center;
+    width: 100%;
+    margin-top: 28px;
+  }
+  .espacio {
+    aspect-ratio: 1;
+    border-radius: 12px;
+    background: var(--c, white);
+    container-type: inline-size;
+    display: grid;
+    place-items: center;
+  }
+  .espacio.vacio { background: white; border: 3px solid var(--gris); }
+  .espacio.siguiente { border-color: var(--naranja); }
+  .espacio.bien { background: var(--verde); animation: saltar .45s; }
+  .espacio.mal { background: var(--rojo); animation: sacudir .4s; }
+  .espacio.objetivo { outline: 3px solid var(--azul); outline-offset: 2px; }
+  .espacio span { color: white; font-weight: 700; line-height: 1; font-size: 1.6rem; font-size: 55cqw; }
+
+  .mensaje {
+    min-height: 36px;
+    margin: 12px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gris);
+  }
+  .mensaje.bien { color: var(--verde); font-size: 1.5rem; font-weight: 700; }
+  .mensaje.mal { color: var(--rojo); font-size: 1.5rem; font-weight: 700; }
+
+  .fichas { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; max-width: 360px; }
+  .ficha, .tarjeta-palabra {
+    position: relative;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+  }
+  .ficha {
+    width: 60px;
+    height: 60px;
+    border-radius: 14px;
+    background: var(--c);
+    color: white;
+    font-size: 1.875rem;
+    font-weight: 700;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, .25);
+  }
+  .ficha.nueva { animation: aparecer .3s backwards; }
+  .ficha.colocada { visibility: hidden; }
+  .ficha:disabled { color: white; }
+  .arrastrando { z-index: 10; cursor: grabbing; box-shadow: 0 10px 22px rgba(0, 0, 0, .3); }
+
+  .pregunta { font-size: 1.375rem; font-weight: 700; margin: 0 0 12px; }
+  .tarjeta-palabra {
+    background: var(--verde);
+    color: white;
+    font-size: 2.5rem;
+    font-weight: 900;
+    letter-spacing: .04em;
+    padding: 10px 28px;
+    border-radius: 20px;
+    box-shadow: 0 6px 14px rgba(67, 160, 71, .4);
+  }
+  .dibujos {
+    display: grid;
+    grid-template-columns: repeat(var(--cols), min(96px, 27vw));
+    gap: 12px;
+    justify-content: center;
+    margin-top: 8px;
+  }
+  .dibujo {
+    aspect-ratio: 1;
+    border-radius: 20px;
+    background: white;
+    border: 3px solid rgba(144, 164, 174, .4);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, .12);
+    font-family: var(--emoji);
+    font-size: min(54px, 15vw);
+    line-height: 1;
+    display: grid;
+    place-items: center;
+    transition: transform .12s;
+  }
+  .dibujo:disabled { color: inherit; }
+  .dibujo.objetivo { transform: scale(1.08); border-color: var(--azul); }
+  .dibujo.descartado { opacity: .45; border-color: var(--rojo); background: #FDECEA; box-shadow: none; }
+  .dibujo.sacudir { animation: sacudir .4s; }
+  .dibujo.correcto { border-color: var(--verde); background: #E3F3E4; animation: saltar .5s; }
+
+  .pie { padding-top: 8px; }
+  .principal, .secundario, .hueco { display: block; width: 100%; height: 64px; border-radius: 20px; }
+  .principal {
+    background: var(--c, var(--azul));
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 700;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, .15);
+  }
+  .secundario { border: 2px solid var(--gris); color: var(--azul); font-size: 1.25rem; }
+  .secundario:disabled { opacity: .4; }
+
+  /* ---------- Resultado ---------- */
+  .final { font-size: 2.5rem; font-weight: 900; margin: 0; }
+  .total { font-size: 3rem; font-weight: 700; margin: 24px 0 12px; }
+  .nota { color: var(--gris); margin: 0 0 40px; max-width: 32ch; }
+  .centro .principal { margin-bottom: 12px; }
+
+  /* ---------- Acerca de ---------- */
+  dialog {
+    border: none;
+    border-radius: 24px;
+    padding: 24px;
+    max-width: min(360px, 90vw);
+    text-align: center;
+    color: var(--texto);
+    background: white;
+  }
+  dialog::backdrop { background: rgba(0, 0, 0, .4); }
+  dialog h2 { margin: 0 0 12px; }
+  dialog .chico { color: var(--gris); font-size: .875rem; margin: 0; }
+  dialog .autor { font-size: 1.125rem; font-weight: 700; margin: 4px 0; }
+  dialog a { color: var(--azul); }
+  dialog form { margin-top: 16px; }
+  dialog form button { color: var(--azul); font-weight: 700; padding: 8px 16px; }
+
+  @keyframes aparecer { from { transform: scale(.6); opacity: 0; } }
+  @keyframes saltar { 50% { transform: scale(1.15); } }
+  @keyframes sacudir {
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<main id="app"></main>
+
+<dialog id="acerca">
+  <h2>Escucha y Escribe</h2>
+  <p>Juego para aprender a escribir: escucha la palabra, acomoda sus letras y encuentra su dibujo.</p>
+  <p class="chico">Hecho por</p>
+  <p class="autor">Fernando Daniel Hernandez Gutierrez</p>
+  <p><a href="mailto:fd.hernandezgutierrez@ugto.mx">fd.hernandezgutierrez@ugto.mx</a></p>
+  <p class="chico">© 2026 Fernando Daniel Hernandez Gutierrez.<br>Todos los derechos reservados.</p>
+  <form method="dialog"><button>Cerrar</button></form>
+</dialog>
+
+<noscript><p style="text-align:center;padding:24px">Para jugar hay que activar JavaScript en el navegador.</p></noscript>
+
+<script>
+'use strict';
+
+const AUTOR = 'Fernando Daniel Hernandez Gutierrez';
+
+// ================================================================ Datos
+
+/**
+ * Palabras que dicta el juego, con su dibujo. En cada partida se eligen 10 al azar.
+ * Para agregar una: en minúsculas, con acento si lo lleva, y un emoji que no se parezca al de otra.
+ */
+const PALABRAS = [
+  // Cortas
+  ['sol', '☀️'], ['ola', '🌊'], ['pan', '🍞'], ['oso', '🐻'], ['uva', '🍇'], ['ojo', '👁️'],
+  ['pez', '🐟'], ['pie', '🦶'], ['ajo', '🧄'], ['flor', '🌼'], ['tren', '🚂'], ['casa', '🏠'],
+  ['gato', '🐱'], ['luna', '🌙'], ['mano', '✋'], ['pato', '🦆'], ['vaca', '🐄'], ['taco', '🌮'],
+  ['rana', '🐸'], ['pera', '🍐'], ['piña', '🍍'], ['niño', '👦'], ['sopa', '🍲'], ['taza', '☕'],
+  ['nube', '☁️'], ['cama', '🛏️'], ['bota', '👢'], ['hoja', '🍁'], ['boca', '👄'], ['mono', '🐒'],
+  ['agua', '💧'], ['león', '🦁'], ['miel', '🍯'], ['dado', '🎲'], ['loro', '🦜'], ['coco', '🥥'],
+  // Medianas
+  ['perro', '🐶'], ['leche', '🥛'], ['queso', '🧀'], ['globo', '🎈'], ['barco', '🚢'], ['silla', '🪑'],
+  ['fresa', '🍓'], ['mango', '🥭'], ['tigre', '🐯'], ['pollo', '🐥'], ['oveja', '🐑'], ['gorra', '🧢'],
+  ['playa', '🏖️'], ['fuego', '🔥'], ['nieve', '❄️'], ['nariz', '👃'], ['dulce', '🍬'], ['carro', '🚗'],
+  ['árbol', '🌳'], ['ratón', '🐭'], ['avión', '✈️'], ['lápiz', '✏️'], ['limón', '🍋'], ['jabón', '🧼'],
+  ['cerdo', '🐷'], ['gallo', '🐓'], ['cebra', '🦓'], ['pulpo', '🐙'], ['llave', '🔑'], ['libro', '📖'],
+  ['abeja', '🐝'], ['araña', '🕷️'], ['hongo', '🍄'], ['reloj', '⏰'], ['pelota', '⚽'], ['conejo', '🐰'],
+  ['jirafa', '🦒'], ['zapato', '👟'], ['helado', '🍦'], ['camión', '🚚'], ['cohete', '🚀'], ['tambor', '🥁'],
+  ['gusano', '🐛'], ['regalo', '🎁'], ['payaso', '🤡'], ['sandía', '🍉'], ['cereza', '🍒'], ['tomate', '🍅'],
+  ['delfín', '🐬'],
+  // Largas
+  ['tortuga', '🐢'], ['caballo', '🐎'], ['galleta', '🍪'], ['manzana', '🍎'], ['naranja', '🍊'],
+  ['escuela', '🏫'], ['corazón', '❤️'], ['plátano', '🍌'], ['caracol', '🐌'], ['estrella', '⭐'],
+  ['elefante', '🐘'], ['mariposa', '🦋'], ['paraguas', '☂️'], ['castillo', '🏰'], ['guitarra', '🎸'],
+].map(([texto, figura]) => ({ texto: texto.normalize('NFC'), figura }));
+
+/** Las tres dificultades: letras de más junto a las de la palabra, y entre cuántos dibujos buscar. */
+const DIFICULTADES = [
+  { nombre: 'Fácil', extra: 3, dibujos: 3, color: 'var(--verde)' },
+  { nombre: 'Medio', extra: 4, dibujos: 4, color: 'var(--naranja)' },
+  { nombre: 'Difícil', extra: 5, dibujos: 6, color: 'var(--morado)' },
+];
+
+const PALABRAS_POR_PARTIDA = 10;
+
+/** Letras que pueden salir de más. Se omiten la H (es muda) y la K, W y X (poco comunes). */
+const LETRAS_EXTRA = [...'ABCDEFGIJLMNÑOPQRSTUVYZ'];
+
+/**
+ * Letras que suenan igual o casi igual. Si la palabra tiene una, sus parecidas no salen de más,
+ * para que el niño no tenga que adivinar entre dos letras que se oyen igual (B y V en «vaca»).
+ */
+const SUENA_COMO = {
+  B: 'V', V: 'B',
+  C: 'SZKQ', S: 'CZ', Z: 'CS', K: 'CQ', Q: 'CK',
+  G: 'J', J: 'G',
+  L: 'Y', Y: 'LI', I: 'Y',
+  'Á': 'A', 'É': 'E', 'Í': 'IY', 'Ó': 'O', 'Ú': 'U',
+};
+
+const COLORES_FICHAS = ['#1E88E5', '#3949AB', '#00897B', '#D81B60', '#8E24AA', '#6D4C41'];
+
+const SVG_BOCINA = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3,9v6h4l5,5V4L7,9H3zM16.5,12c0,-1.77 -1.02,-3.29 -2.5,-4.03v8.05c1.48,-0.73 2.5,-2.25 2.5,-4.02zM14,3.23v2.06c2.89,0.86 5,3.54 5,6.71s-2.11,5.85 -5,6.71v2.06c4.01,-0.91 7,-4.49 7,-8.77s-2.99,-7.86 -7,-8.77z"/></svg>';
+
+// ================================================================ Utilidades
+
+function revolver(lista) {
+  const a = [...lista];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+const mayusculas = (t) => t.toLocaleUpperCase('es');
+
+/** Crea un elemento: el('button', { class: 'x', text: 'Hola', onclick: fn }, hijo1, hijo2). */
+function el(etiqueta, atributos = {}, ...hijos) {
+  const e = document.createElement(etiqueta);
+  for (const [k, v] of Object.entries(atributos)) {
+    if (k === 'class') e.className = v;
+    else if (k === 'text') e.textContent = v;
+    else if (k === 'style') e.style.cssText = v;
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+    else e.setAttribute(k, v);
+  }
+  for (const h of hijos) if (h != null) e.append(h);
+  return e;
+}
+
+const centroDe = (e) => {
+  const r = e.getBoundingClientRect();
+  return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+};
+
+// ================================================================ Voz
+
+const voz = { estado: 'cargando', voz: null };
+
+function elegirVoz() {
+  if (!('speechSynthesis' in window)) { voz.estado = 'sin-motor'; return; }
+  const voces = speechSynthesis.getVoices();
+  if (!voces.length) return; // todavía cargando
+  const idioma = (v) => v.lang.replace('_', '-').toLowerCase();
+  let elegida = null;
+  for (const tag of ['es-mx', 'es-us', 'es-419', 'es-es']) {
+    elegida = voces.find((v) => idioma(v) === tag);
+    if (elegida) break;
+  }
+  if (!elegida) elegida = voces.find((v) => idioma(v).startsWith('es'));
+  voz.voz = elegida || null;
+  voz.estado = elegida ? 'lista' : 'sin-espanol';
+}
+
+function textoAvisoVoz() {
+  switch (voz.estado) {
+    case 'lista': return '';
+    case 'cargando': return 'Preparando la voz…';
+    case 'sin-espanol':
+      return 'Este navegador no tiene voz en español. En Windows: Configuración › Hora e idioma › Voz › Agregar voces › Español. En el celular: instala la voz en español en «Texto a voz».';
+    default: return 'Este navegador no puede hablar. Prueba con Chrome, Edge o Safari.';
+  }
+}
+
+/** Revisa de nuevo las voces y actualiza los avisos; si la voz acaba de quedar lista, dice la palabra. */
+function actualizarVoz() {
+  const antes = voz.estado;
+  elegirVoz();
+  document.querySelectorAll('[data-aviso]').forEach((p) => {
+    p.textContent = textoAvisoVoz();
+    p.classList.toggle('cargando', voz.estado === 'cargando');
+  });
+  document.querySelectorAll('.bocina').forEach((b) => { b.disabled = voz.estado !== 'lista'; });
+  if (antes !== 'lista' && voz.estado === 'lista' && pantalla === 'juego' && partida.fase === 'escribir') {
+    decir(partida.palabra.texto);
+  }
+}
+
+/** Dice el texto en voz alta; corta lo que estuviera diciendo antes. */
+function decir(texto) {
+  if (voz.estado !== 'lista') return;
+  speechSynthesis.cancel();
+  // En minúsculas: en mayúsculas algunas voces deletrean («S-O-L») en lugar de leer «sol».
+  const u = new SpeechSynthesisUtterance(texto.toLocaleLowerCase('es'));
+  u.voice = voz.voz;
+  u.lang = voz.voz.lang;
+  u.rate = 0.85; // un poco más lento, para niños
+  speechSynthesis.speak(u);
+}
+
+if ('speechSynthesis' in window) speechSynthesis.addEventListener('voiceschanged', actualizarVoz);
+elegirVoz();
+// Algunos navegadores nunca avisan que cargaron las voces: después de un rato, se da por hecho.
+setTimeout(() => {
+  if (voz.estado === 'cargando') {
+    elegirVoz();
+    if (voz.estado === 'cargando') voz.estado = 'sin-espanol';
+  }
+  actualizarVoz();
+}, 3000);
+
+// ================================================================ Lógica del juego
+
+let pantalla = 'menu'; // 'menu' | 'juego' | 'fin'
+let partida = null;
+let temporizador = null;
+
+/** Las fichas de una palabra: sus letras más `extra` letras distintas, todas revueltas. */
+function crearFichas(letras, extra) {
+  const prohibidas = new Set(letras);
+  letras.forEach((l) => [...(SUENA_COMO[l] || '')].forEach((x) => prohibidas.add(x)));
+  let candidatas = LETRAS_EXTRA.filter((l) => !prohibidas.has(l));
+  if (candidatas.length < extra) candidatas = LETRAS_EXTRA.filter((l) => !letras.includes(l));
+  const deMas = revolver(candidatas).slice(0, extra);
+  return revolver([...letras, ...deMas]).map((letra, id) => ({ id, letra }));
+}
+
+/** El dibujo correcto más otros distintos, revueltos. */
+function crearOpciones(palabra, cuantos) {
+  const vistas = new Set([palabra.figura]);
+  const otras = [];
+  for (const p of revolver(PALABRAS)) {
+    if (otras.length >= cuantos - 1) break;
+    if (p.texto === palabra.texto || vistas.has(p.figura)) continue;
+    vistas.add(p.figura);
+    otras.push(p);
+  }
+  return revolver([...otras, palabra]);
+}
+
+function nuevaPartida(nivel) {
+  partida = {
+    nivel,
+    dif: DIFICULTADES[nivel],
+    palabras: revolver(PALABRAS).slice(0, PALABRAS_POR_PARTIDA),
+    indice: 0,
+    estrellas: 0,
+  };
+  prepararPalabra();
+}
+
+function prepararPalabra() {
+  const p = partida;
+  p.palabra = p.palabras[p.indice];
+  p.letras = [...mayusculas(p.palabra.texto)];
+  p.fase = 'escribir';
+  p.fichas = crearFichas(p.letras, p.dif.extra);
+  p.espacios = p.letras.map(() => null); // ficha puesta en cada lugar, o null
+  p.revision = 'pendiente'; // 'pendiente' | 'correcta' | 'incorrecta'
+  p.opciones = crearOpciones(p.palabra, p.dif.dibujos);
+  p.descartadas = new Set(); // dibujos elegidos por error
+  p.encontrada = false;
+  p.errorAlEscribir = false;
+  p.errorAlBuscar = false;
+  p.animarEntrada = true;
+  p.sacudir = null;
+}
+
+const esUltima = () => partida.indice === partida.palabras.length - 1;
+const estaColocada = (f) => partida.espacios.some((x) => x && x.id === f.id);
+const esCorrecta = (i) => partida.espacios[i] && partida.espacios[i].letra === partida.letras[i];
+const colorDeFicha = (f) => COLORES_FICHAS[f.id % COLORES_FICHAS.length];
+
+/** Ejecuta `fn` después de `ms`, solo si el niño sigue en la misma palabra. */
+function programar(ms, fn) {
+  clearTimeout(temporizador);
+  const p = partida;
+  const i = p.indice;
+  temporizador = setTimeout(() => {
+    if (pantalla === 'juego' && partida === p && p.indice === i) fn();
+  }, ms);
+}
+
+/**
+ * Pone la ficha en el lugar `i`; si ya había otra letra ahí, esa regresa.
+ * Si con eso se llenan todos, revisa la palabra y devuelve 'correcta' o 'incorrecta'.
+ */
+function colocarEn(ficha, i) {
+  const p = partida;
+  if (p.fase !== 'escribir' || p.revision !== 'pendiente' || i < 0 || i >= p.espacios.length) return null;
+  const anterior = p.espacios.findIndex((x) => x && x.id === ficha.id);
+  if (anterior >= 0) p.espacios[anterior] = null;
+  p.espacios[i] = ficha;
+  if (p.espacios.includes(null)) return null;
+  if (p.espacios.every((_, j) => esCorrecta(j))) {
+    p.revision = 'correcta';
+  } else {
+    p.revision = 'incorrecta';
+    p.errorAlEscribir = true;
+  }
+  return p.revision;
+}
+
+/** Cuando el niño toca una letra en lugar de arrastrarla: va al primer lugar vacío. */
+function colocar(ficha) {
+  const vacio = partida.espacios.indexOf(null);
+  return vacio < 0 ? null : colocarEn(ficha, vacio);
+}
+
+/** Dibuja de nuevo y reacciona al resultado de poner una letra. */
+function avisar(resultado) {
+  render();
+  if (resultado === 'correcta') {
+    decir('¡Muy bien!');
+    programar(1500, pasarARelacionar);
+  } else if (resultado === 'incorrecta') {
+    decir('Inténtalo otra vez');
+    programar(1300, quitarIncorrectas);
+  }
+}
+
+function quitar(i) {
+  const p = partida;
+  if (p.fase !== 'escribir' || p.revision === 'correcta' || !p.espacios[i]) return;
+  p.espacios[i] = null;
+  p.revision = 'pendiente';
+  render();
+}
+
+function borrarTodo() {
+  const p = partida;
+  if (p.fase !== 'escribir' || p.revision === 'correcta') return;
+  p.espacios = p.espacios.map(() => null);
+  p.revision = 'pendiente';
+  render();
+}
+
+/** Después de un error: deja las letras bien puestas y regresa las demás. */
+function quitarIncorrectas() {
+  const p = partida;
+  if (p.revision !== 'incorrecta') return;
+  p.espacios = p.espacios.map((x, i) => (esCorrecta(i) ? x : null));
+  p.revision = 'pendiente';
+  render();
+}
+
+function pasarARelacionar() {
+  const p = partida;
+  if (p.fase !== 'escribir' || p.revision !== 'correcta') return;
+  p.fase = 'relacionar';
+  render();
+  decir(`¿Cuál es el dibujo de ${p.palabra.texto}?`);
+}
+
+/** El niño eligió un dibujo. Gana estrella si escribió y encontró a la primera. */
+function elegirDibujo(opcion) {
+  const p = partida;
+  if (p.fase !== 'relacionar' || p.encontrada || p.descartadas.has(opcion.texto)) return;
+  if (opcion.texto === p.palabra.texto) {
+    p.encontrada = true;
+    if (!p.errorAlEscribir && !p.errorAlBuscar) p.estrellas++;
+    render();
+    decir(`¡Sí! Eso es ${opcion.texto}.`);
+  } else {
+    p.descartadas.add(opcion.texto);
+    p.errorAlBuscar = true;
+    p.sacudir = opcion.texto;
+    render();
+    decir(`No, eso es ${opcion.texto}. Busca ${p.palabra.texto}.`);
+  }
+}
+
+function jugar(nivel) {
+  clearTimeout(temporizador);
+  nuevaPartida(nivel);
+  pantalla = 'juego';
+  render();
+  decir(partida.palabra.texto);
+}
+
+function siguiente() {
+  const p = partida;
+  if (!p.encontrada) return;
+  if (esUltima()) {
+    pantalla = 'fin';
+    render();
+    const e = p.estrellas;
+    decir(`${mensajeFinal()} Ganaste ${e === 1 ? 'una estrella' : `${e} estrellas`}.`);
+    return;
+  }
+  p.indice++;
+  prepararPalabra();
+  render();
+  decir(p.palabra.texto);
+}
+
+function irAlMenu() {
+  clearTimeout(temporizador);
+  if ('speechSynthesis' in window) speechSynthesis.cancel();
+  pantalla = 'menu';
+  render();
+}
+
+function mensajeFinal() {
+  const total = partida.palabras.length;
+  const e = partida.estrellas;
+  if (e * 10 >= total * 8) return '¡Excelente!';
+  if (e * 2 >= total) return '¡Muy bien!';
+  return '¡Sigue practicando!';
+}
+
+// ================================================================ Arrastrar
+
+/**
+ * Hace que un botón se pueda arrastrar con el dedo o el mouse.
+ * alSoltar(punto) recibe el centro de lo arrastrado; si devuelve false, regresa a su lugar.
+ * alTocar() se llama si solo se tocó (o con Enter); alMover(punto) mientras se arrastra.
+ */
+function hacerArrastrable(boton, { alTocar, alSoltar, alMover }) {
+  let inicio = null;
+  let arrastrando = false;
+  let ignorarClickHasta = 0;
+
+  boton.addEventListener('pointerdown', (e) => {
+    if (e.button !== 0 || boton.disabled) return;
+    inicio = { x: e.clientX, y: e.clientY, id: e.pointerId };
+    arrastrando = false;
+    try { boton.setPointerCapture(e.pointerId); } catch { /* algunos navegadores no lo permiten: no pasa nada */ }
+  });
+
+  boton.addEventListener('pointermove', (e) => {
+    if (!inicio || e.pointerId !== inicio.id) return;
+    const dx = e.clientX - inicio.x;
+    const dy = e.clientY - inicio.y;
+    if (!arrastrando) {
+      if (Math.hypot(dx, dy) < 8) return; // todavía es un toque
+      arrastrando = true;
+      // Sin la animación de entrada: mientras corre, no deja que la letra siga al dedo.
+      boton.classList.remove('nueva');
+      boton.style.animation = 'none';
+      boton.classList.add('arrastrando');
+      boton.style.transition = 'none';
+    }
+    boton.style.transform = `translate(${dx}px, ${dy}px) scale(1.15)`;
+    if (alMover) alMover(centroDe(boton));
+  });
+
+  const terminar = (e, cancelado) => {
+    if (!inicio || e.pointerId !== inicio.id) return;
+    inicio = null;
+    if (!arrastrando) return; // fue un toque: lo atiende 'click'
+    arrastrando = false;
+    ignorarClickHasta = performance.now() + 400;
+    if (alMover) alMover(null);
+    const punto = centroDe(boton);
+    boton.classList.remove('arrastrando');
+    const aceptado = !cancelado && alSoltar(punto);
+    if (!aceptado) {
+      boton.style.transition = 'transform .25s ease';
+      boton.style.transform = '';
+    }
+  };
+  boton.addEventListener('pointerup', (e) => terminar(e, false));
+  boton.addEventListener('pointercancel', (e) => terminar(e, true));
+
+  boton.addEventListener('click', () => {
+    if (performance.now() < ignorarClickHasta) return;
+    if (alTocar) alTocar();
+  });
+}
+
+/** El lugar más cercano al punto (con un margen generoso para dedos pequeños), o null. */
+function espacioEn(punto) {
+  let mejor = null;
+  let distancia = Infinity;
+  document.querySelectorAll('.espacio').forEach((s, i) => {
+    const r = s.getBoundingClientRect();
+    const m = r.width * 0.4;
+    if (punto.x < r.left - m || punto.x > r.right + m || punto.y < r.top - m || punto.y > r.bottom + m) return;
+    const d = Math.hypot(punto.x - (r.left + r.width / 2), punto.y - (r.top + r.height / 2));
+    if (d < distancia) { distancia = d; mejor = i; }
+  });
+  return mejor;
+}
+
+/** El dibujo (no descartado) que está bajo el punto, o null. */
+function dibujoEn(punto) {
+  for (const b of document.querySelectorAll('.dibujo:not(.descartado)')) {
+    const r = b.getBoundingClientRect();
+    if (punto.x >= r.left && punto.x <= r.right && punto.y >= r.top && punto.y <= r.bottom) {
+      return PALABRAS.find((p) => p.texto === b.dataset.texto);
+    }
+  }
+  return null;
+}
+
+/** Marca el elemento que quedaría bajo lo que se arrastra. */
+function marcarObjetivo(selector, elemento) {
+  document.querySelectorAll(`${selector}.objetivo`).forEach((x) => x.classList.remove('objetivo'));
+  if (elemento) elemento.classList.add('objetivo');
+}
+
+// ================================================================ Pantallas
+
+const app = document.getElementById('app');
+
+function render() {
+  app.replaceChildren(
+    pantalla === 'menu' ? vistaMenu() : pantalla === 'juego' ? vistaJuego() : vistaFin(),
+  );
+  if (partida) {
+    partida.animarEntrada = false;
+    partida.sacudir = null;
+  }
+}
+
+function avisoVoz() {
+  return el('p', {
+    class: voz.estado === 'cargando' ? 'aviso cargando' : 'aviso',
+    'data-aviso': '',
+    text: textoAvisoVoz(),
+  });
+}
+
+function vistaMenu() {
+  return el('section', { class: 'pantalla' },
+    el('div', { class: 'centro' },
+      el('h1', { text: 'Escucha y Escribe' }),
+      el('p', { class: 'sub', text: 'Escucha la palabra, arrastra las letras a su lugar y encuentra su dibujo.' }),
+      ...DIFICULTADES.map((d, i) => el('button', { class: 'nivel', style: `--c:${d.color}`, onclick: () => jugar(i) },
+        el('span', { class: 'nombre', text: d.nombre }),
+        el('span', { class: 'detalle', text: `${d.extra} letras extra · ${d.dibujos} dibujos` }),
+      )),
+      avisoVoz(),
+    ),
+    el('button', {
+      class: 'creditos',
+      text: `Hecho por ${AUTOR}`,
+      onclick: () => document.getElementById('acerca').showModal(),
+    }),
+  );
+}
+
+function vistaJuego() {
+  const p = partida;
+  const barra = el('header', { class: 'barra' },
+    el('button', { class: 'enlace', text: '← Menú', onclick: irAlMenu }),
+    el('span', { class: 'avance', style: `color:${p.dif.color}`, text: `Palabra ${p.indice + 1} de ${p.palabras.length}` }),
+    el('span', { class: 'estrellas', text: `⭐ ${p.estrellas}` }),
+  );
+
+  let pie;
+  if (p.fase === 'relacionar' && p.encontrada) {
+    pie = el('button', {
+      class: 'principal',
+      style: '--c:var(--verde)',
+      text: esUltima() ? 'Ver resultado' : 'Siguiente ➜',
+      onclick: siguiente,
+    });
+  } else if (p.fase === 'escribir' && p.revision !== 'correcta') {
+    pie = el('button', { class: 'secundario', text: 'Borrar', onclick: borrarTodo });
+    pie.disabled = !(p.revision === 'pendiente' && p.espacios.some(Boolean));
+  } else {
+    pie = el('div', { class: 'hueco' });
+  }
+
+  return el('section', { class: 'pantalla' },
+    barra,
+    p.fase === 'escribir' ? vistaEscribir() : vistaRelacionar(),
+    el('footer', { class: 'pie' }, pie),
+  );
+}
+
+/** Paso 1: escuchar y acomodar las letras. */
+function vistaEscribir() {
+  const p = partida;
+
+  const bocina = el('button', { class: 'bocina', 'aria-label': 'Escuchar la palabra', onclick: () => decir(p.palabra.texto) });
+  bocina.innerHTML = SVG_BOCINA;
+  bocina.disabled = voz.estado !== 'lista';
+
+  const siguienteVacio = p.espacios.indexOf(null);
+  const espacios = el('div', { class: 'espacios', style: `--n:${p.espacios.length}` },
+    ...p.espacios.map((f, i) => {
+      const clases = ['espacio'];
+      if (!f) {
+        clases.push('vacio');
+        if (i === siguienteVacio && p.revision === 'pendiente') clases.push('siguiente');
+      } else if (p.revision === 'correcta') {
+        clases.push('bien');
+      } else if (p.revision === 'incorrecta' && !esCorrecta(i)) {
+        clases.push('mal');
+      }
+      const b = el('button', {
+        class: clases.join(' '),
+        'aria-label': f ? `Letra ${f.letra}; tócala para quitarla` : `Lugar ${i + 1}, vacío`,
+        onclick: () => quitar(i),
+      });
+      if (f) {
+        if (clases.length === 1) b.style.setProperty('--c', colorDeFicha(f));
+        b.append(el('span', { text: f.letra }));
+      }
+      b.disabled = !f || p.revision === 'correcta';
+      return b;
+    }),
+  );
+
+  const [texto, clase] = {
+    pendiente: ['Arrastra cada letra a su lugar', 'mensaje'],
+    correcta: ['¡Muy bien!', 'mensaje bien'],
+    incorrecta: ['Casi… inténtalo otra vez', 'mensaje mal'],
+  }[p.revision];
+
+  const fichas = el('div', { class: 'fichas' },
+    ...p.fichas.map((f) => {
+      const colocada = estaColocada(f);
+      const b = el('button', {
+        class: 'ficha' + (colocada ? ' colocada' : '') + (p.animarEntrada ? ' nueva' : ''),
+        style: `--c:${colorDeFicha(f)}`,
+        'aria-label': `Letra ${f.letra}`,
+        text: f.letra,
+      });
+      if (colocada || p.revision !== 'pendiente') {
+        b.disabled = true;
+        b.tabIndex = -1;
+      } else {
+        hacerArrastrable(b, {
+          alTocar: () => avisar(colocar(f)),
+          alMover: (punto) => {
+            const i = punto ? espacioEn(punto) : null;
+            marcarObjetivo('.espacio', i === null ? null : document.querySelectorAll('.espacio')[i]);
+          },
+          alSoltar: (punto) => {
+            const i = espacioEn(punto);
+            if (i === null) return false;
+            avisar(colocarEn(f, i));
+            return true;
+          },
+        });
+      }
+      return b;
+    }),
+  );
+
+  return el('div', { class: 'centro' },
+    bocina,
+    el('p', { class: 'pista', text: 'Toca para escuchar otra vez' }),
+    avisoVoz(),
+    espacios,
+    el('p', { class: clase, text: texto }),
+    fichas,
+  );
+}
+
+/** Paso 2: llevar la palabra a su dibujo. */
+function vistaRelacionar() {
+  const p = partida;
+
+  const tarjeta = el('button', {
+    class: 'tarjeta-palabra',
+    text: mayusculas(p.palabra.texto),
+    'aria-label': `${p.palabra.texto}: arrástrala a su dibujo`,
+  });
+  if (p.encontrada) {
+    tarjeta.addEventListener('click', () => decir(p.palabra.texto));
+  } else {
+    hacerArrastrable(tarjeta, {
+      alTocar: () => decir(p.palabra.texto),
+      alMover: (punto) => {
+        const op = punto ? dibujoEn(punto) : null;
+        marcarObjetivo('.dibujo', op ? document.querySelector(`.dibujo[data-texto="${op.texto}"]`) : null);
+      },
+      alSoltar: (punto) => {
+        const op = dibujoEn(punto);
+        if (op) elegirDibujo(op);
+        return false; // la palabra siempre regresa a su lugar
+      },
+    });
+  }
+
+  const dibujos = el('div', { class: 'dibujos', style: `--cols:${p.opciones.length === 4 ? 2 : 3}` },
+    ...p.opciones.map((op) => {
+      const descartada = p.descartadas.has(op.texto);
+      const correcta = p.encontrada && op.texto === p.palabra.texto;
+      const clases = ['dibujo'];
+      if (descartada) clases.push('descartado');
+      if (p.sacudir === op.texto) clases.push('sacudir');
+      if (correcta) clases.push('correcto');
+      const b = el('button', {
+        class: clases.join(' '),
+        'data-texto': op.texto,
+        'aria-label': descartada || correcta ? op.texto : 'Dibujo',
+        text: op.figura,
+        onclick: () => elegirDibujo(op),
+      });
+      b.disabled = descartada || p.encontrada;
+      return b;
+    }),
+  );
+
+  const mensaje = p.encontrada
+    ? el('p', { class: 'mensaje bien', text: `¡Sí! Eso es ${p.palabra.texto} ${p.palabra.figura}` })
+    : el('p', { class: 'mensaje', text: 'Arrástrala a su dibujo' });
+
+  return el('div', { class: 'centro' },
+    el('p', { class: 'pregunta', text: '¿Cuál es el dibujo de…' }),
+    tarjeta,
+    mensaje,
+    dibujos,
+  );
+}
+
+function vistaFin() {
+  const p = partida;
+  return el('section', { class: 'pantalla' },
+    el('div', { class: 'centro' },
+      el('h2', { class: 'final', style: `color:${p.dif.color}`, text: mensajeFinal() }),
+      el('p', { class: 'total', text: `⭐ ${p.estrellas} de ${p.palabras.length}` }),
+      el('p', { class: 'nota', text: 'Ganas una estrella por cada palabra que escribes y encuentras a la primera.' }),
+      el('button', { class: 'principal', style: `--c:${p.dif.color}`, text: 'Jugar otra vez', onclick: () => jugar(p.nivel) }),
+      el('button', { class: 'secundario', text: 'Cambiar dificultad', onclick: irAlMenu }),
+    ),
+  );
+}
+
+// Cerrar «Acerca de» al tocar fuera de la ventana.
+document.getElementById('acerca').addEventListener('click', (e) => {
+  const r = e.currentTarget.getBoundingClientRect();
+  const fuera = e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom;
+  if (fuera) e.currentTarget.close();
+});
+
+render();
+</script>
+</body>
+</html>

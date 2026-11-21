@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contacto · Fernando D. Hernández</title>
+<meta name="description" content="Contacto para colaboraciones de investigación, dirección de tesis y actividades académicas.">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/estilos.css">
+</head>
+<body data-pagina="contacto">
+<a class="saltar" href="#contenido">Saltar al contenido</a>
+<div id="barra"></div>
+
+<header class="cabecera-pagina">
+  <div class="ancho">
+    <p class="sobretitulo">Contacto</p>
+    <h1>Trabajemos juntos</h1>
+    <p>Colaboraciones de investigación, dirección de tesis, revisiones o asesoría en aprendizaje profundo.</p>
+  </div>
+</header>
+
+<main id="contenido">
+  <section class="seccion primera">
+    <div class="ancho contacto-grid">
+      <div id="datos-contacto"></div>
+
+      <form class="tarjeta formulario" id="formulario" method="post" novalidate>
+        <div class="fila">
+          <label>Nombre
+            <input name="nombre" type="text" required minlength="2" maxlength="100" autocomplete="name">
+          </label>
+          <label>Correo electrónico
+            <input name="email" type="email" required maxlength="150" autocomplete="email">
+          </label>
+        </div>
+        <label>Tema
+          <select name="asunto" id="asunto"></select>
+        </label>
+        <label>Mensaje
+          <textarea name="mensaje" required minlength="10" maxlength="5000"></textarea>
+        </label>
+        <!-- Campo trampa para robots: las personas no lo ven ni lo llenan -->
+        <div class="trampa" aria-hidden="true">
+          <label>No llene este campo <input name="_gotcha" type="text" tabindex="-1" autocomplete="off"></label>
+        </div>
+        <div class="aviso-form" id="aviso-form" role="status" tabindex="-1"></div>
+        <div class="pie-form">
+          <p class="privacidad" id="privacidad"></p>
+          <button class="btn prim" type="submit">Enviar mensaje</button>
+        </div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<div id="pie"></div>
+<script src="assets/js/datos.js"></script>
+<script src="assets/js/sitio.js"></script>
+</body>
+</html>

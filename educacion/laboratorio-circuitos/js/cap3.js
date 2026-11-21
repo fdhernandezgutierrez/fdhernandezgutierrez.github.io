@@ -1,4 +1,4 @@
-/* cap3.js — Cap. 3: reducción serie-paralelo tocando resistencias, y divisores. */
+/* cap3.js — Módulo 2: reducción serie-paralelo tocando resistencias, y divisores. */
 (function (G) {
   "use strict";
   const L = G.LAB;
@@ -7,7 +7,7 @@
   const NARANJA = "#E65100", COLOR_A = "#D81B60";
 
   (L.MODULOS = L.MODULOS || {}).cap3 = {
-    titulo: "Cap. 3 · Circuitos resistivos",
+    titulo: "Circuitos resistivos",
     subtitulo: "Reducción serie-paralelo y divisores",
     montar(raiz, ctx) {
       let pr, red, contador, seleccion, pendiente, aviso, pasos, revision, pista, verSolucion, entrada;

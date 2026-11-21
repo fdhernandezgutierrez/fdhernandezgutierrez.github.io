@@ -1,4 +1,4 @@
-/* cap12.js — Caps. 1 y 2: convención pasiva y balance de potencia. */
+/* cap12.js — Módulo 1: convención pasiva y balance de potencia. */
 (function (G) {
   "use strict";
   const L = G.LAB;
@@ -6,7 +6,7 @@
     ResultadoRevision, Numero, dibujarEsquema, EjercicioElemento, EjercicioBalance, semillaNueva, fmt } = L;
 
   (L.MODULOS = L.MODULOS || {}).cap12 = {
-    titulo: "Caps. 1 y 2 · Potencia",
+    titulo: "Potencia",
     subtitulo: "Convención pasiva",
     montar(raiz, ctx) {
       let modo = 0, racha = 0, semilla, el, bal, entrada, revision, verSolucion, pista;

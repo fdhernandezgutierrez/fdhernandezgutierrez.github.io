@@ -84,7 +84,9 @@ window.PERFIL = {
       titulo: "Clasificación de retinopatía diabética",
       resumen: "SABER-DR combina predicción multiclase global, aprendizaje ordinal y expertos especializados en las fronteras entre grados adyacentes. En APTOS 2019 alcanzó Macro-F1 de 0.6330 y kappa ponderado cuadrático de 0.8371; en validación cruzada superó a EfficientNet-B0 y B1 entrenadas en las mismas condiciones.",
       etiquetas: ["EfficientNet", "Clasificación ordinal", "APTOS 2019", "Mezcla de expertos", "DCGAN"],
-      estado: "Tesis doctoral"
+      estado: "Tesis doctoral",
+      enlace: "saber-dr/index.html",
+      textoEnlace: "Conozca la aplicación SABER-DR"
     },
     {
       id: "cerebro",
@@ -239,9 +241,9 @@ window.PERFIL = {
 
   // enlace: URL opcional (repositorio, tienda de apps, demostración)
   proyectos: [
-    { titulo: "SABER-DR Web", texto: "Aplicación web que gradúa la retinopatía diabética con un ensamble de cinco modelos.", etiqueta: "Software", enlace: "" },
-    { titulo: "SABER-DR Android", texto: "Clasificación en el teléfono con ONNX, sin conexión a internet.", etiqueta: "Software", enlace: "" },
-    { titulo: "Laboratorio de Circuitos", texto: "Práctica guiada de Circuitos Eléctricos (Dorf, caps. 1 a 10), para Android y en el navegador.", etiqueta: "Docencia", enlace: "educacion/laboratorio-circuitos/index.html" }
+    { titulo: "SABER-DR Web", texto: "Aplicación web que gradúa la retinopatía diabética con un ensamble de cinco modelos.", etiqueta: "Software", enlace: "saber-dr/index.html" },
+    { titulo: "SABER-DR Android", texto: "Clasificación en el teléfono con ONNX, sin conexión a internet.", etiqueta: "Software", enlace: "saber-dr/index.html#versiones" },
+    { titulo: "Laboratorio de Circuitos", texto: "Práctica guiada de circuitos eléctricos, de la potencia y los nodos y mallas a los circuitos RLC y los fasores, para Android y en el navegador.", etiqueta: "Docencia", enlace: "educacion/laboratorio-circuitos/index.html" }
   ],
 
   revision: [

@@ -1,4 +1,4 @@
-/* cap9.js — Cap. 9: circuitos RLC (plano s, lugar de las raíces, respuesta y práctica). */
+/* cap9.js — Módulo 7: circuitos RLC (plano s, lugar de las raíces, respuesta y práctica). */
 (function (G) {
   "use strict";
   const L = G.LAB;
@@ -74,7 +74,7 @@
   }
 
   (L.MODULOS = L.MODULOS || {}).cap9 = {
-    titulo: "Cap. 9 · Circuitos RLC",
+    titulo: "Circuitos RLC",
     montar(raiz, ctx) {
       let modo = ctx.extra === "practicar" ? 1 : 0;
       let serie = true;
@@ -101,7 +101,7 @@
             Grafica([{ x: Array.from(sim.t), y: Array.from(y), color: COLOR_TIPO[so.tipo] }, { x: [0, tf], y: [final, final], color: GRIS, discontinua: true }],
               "t (s)", `${nombres[verCorriente ? 1 : 0]} (${unidad})`),
             Texto(expresion(c)),
-            Chico("La curva se calcula con el simulador del circuito; la expresión es la solución analítica del libro. La línea punteada es el valor final."));
+            Chico("La curva se calcula con el simulador del circuito; la expresión es la solución analítica. La línea punteada es el valor final."));
         }
         function actualizar(cambioLC = true) {
           const c = rlc(), so = c.so, [s1, s2] = so.raices;

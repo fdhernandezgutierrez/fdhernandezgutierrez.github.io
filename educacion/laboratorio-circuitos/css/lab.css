@@ -90,7 +90,7 @@
 .esquema svg{width:100%;max-width:560px;height:auto;display:block}
 .esquema.tocable svg{cursor:pointer;touch-action:manipulation}
 
-/* Tabla A·x = b (cap. 4) */
+/* Tabla A·x = b (nodos y mallas) */
 .lab-matriz{display:grid;gap:6px;overflow-x:auto}
 .lab-matriz .fila{display:grid;gap:4px;align-items:center}
 .lab-matriz .cab{font-size:13px;color:var(--gris-l);text-align:center;font-style:italic}

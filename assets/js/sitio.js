@@ -14,6 +14,8 @@
   const $ = (sel, raiz) => (raiz || document).querySelector(sel);
   const $$ = (sel, raiz) => Array.from((raiz || document).querySelectorAll(sel));
   const pagina = document.body.dataset.pagina;
+  // Páginas internas de una sección (p. ej. saber-dr/) marcan en el menú la sección a la que pertenecen: data-menu="proyectos"
+  const seccionMenu = document.body.dataset.menu || pagina;
   // Páginas dentro de subcarpetas (educacion/, juegos/) indican cuánto subir: data-raiz="../"
   const raiz = document.body.dataset.raiz || "";
 
@@ -135,6 +137,7 @@
         <h3>${l.titulo}</h3>
         <p>${l.resumen}</p>
         <div class="tags">${l.etiquetas.map(t => `<span>${t}</span>`).join("")}</div>
+        ${conRelacionadas && l.enlace ? `<p class="nota" style="margin:14px 0 0"><a href="${l.enlace}">${l.textoEnlace || "Ver proyecto"} →</a></p>` : ""}
         ${rel}
       </div>
     </article>`;
@@ -152,7 +155,7 @@
         <a class="logo" href="${raiz}index.html" aria-label="Inicio"><span class="sello">${P.iniciales}</span><span class="logo-nombre">${P.nombreCorto}</span></a>
         <button class="hamburguesa" type="button" aria-expanded="false" aria-controls="menu-principal" aria-label="Abrir menú"><span></span></button>
         <ul class="menu" id="menu-principal">
-          ${MENU.map(m => `<li><a href="${raiz}${m.url}"${m.id === pagina ? ' aria-current="page"' : ""}>${m.texto}</a></li>`).join("")}
+          ${MENU.map(m => `<li><a href="${raiz}${m.url}"${m.id === seccionMenu ? ' aria-current="page"' : ""}>${m.texto}</a></li>`).join("")}
         </ul>
       </div>`;
     lugar.replaceWith(nav);
@@ -268,7 +271,7 @@
       poner("#lista-investigacion", cronologia(P.proyectosInvestigacion));
       poner("#lista-proyectos", P.proyectos.map(p => `
         <div class="proy"><small>${p.etiqueta}</small><b>${p.titulo}</b><p>${p.texto}</p>
-          ${p.enlace ? `<a href="${p.enlace}" target="_blank" rel="noopener">Ver proyecto →</a>` : ""}</div>`).join(""));
+          ${p.enlace ? `<a href="${p.enlace}"${/^https?:/.test(p.enlace) ? ' target="_blank" rel="noopener"' : ""}>Ver proyecto →</a>` : ""}</div>`).join(""));
       poner("#lista-revision", P.revision.map(s => `<li><time>Revisión</time><b>${s.titulo}</b><span>${s.texto}</span></li>`).join("") + cronologia(P.servicio));
       poner("#lista-divulgacion", cronologia(P.divulgacion));
       // Oculta las secciones que quedaron sin contenido

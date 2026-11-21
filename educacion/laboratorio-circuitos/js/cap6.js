@@ -1,4 +1,4 @@
-/* cap6.js — Cap. 6: amplificador operacional (explorar configuraciones con saturación y practicar vo). */
+/* cap6.js — Módulo 5: amplificador operacional (explorar configuraciones con saturación y practicar vo). */
 (function (G) {
   "use strict";
   const L = G.LAB;
@@ -9,7 +9,7 @@
   const recortar = (x, vsat) => Math.min(vsat, Math.max(-vsat, x));
 
   (L.MODULOS = L.MODULOS || {}).cap6 = {
-    titulo: "Cap. 6 · Amplificador operacional",
+    titulo: "Amplificador operacional",
     montar(raiz, ctx) {
       let modo = ctx.extra === "practicar" ? 1 : 0;
       let conf = CONFIGURACIONES[0];

@@ -10,21 +10,21 @@
 
   // Orden y presentación, como en la pantalla de inicio de la app.
   const LISTA = [
-    { id: "cap12", cap: "1–2", nombre: "Potencia", color: "#E65100",
+    { id: "cap12", nombre: "Potencia", color: "#E65100",
       descripcion: "Convención pasiva: decide si un elemento absorbe o entrega potencia, y comprueba el balance de potencia de un circuito." },
-    { id: "cap3", cap: "3", nombre: "Circuitos resistivos", color: "#2E7D32",
+    { id: "cap3", nombre: "Circuitos resistivos", color: "#2E7D32",
       descripcion: "Reduce redes serie-paralelo tocando pares de resistencias y aplica divisores de voltaje y de corriente." },
-    { id: "cap4", cap: "4", nombre: "Nodos y mallas", color: "#1F3A93",
+    { id: "cap4", nombre: "Nodos y mallas", color: "#1F3A93",
       descripcion: "Plantea A·x = b con supernodos, supermallas y fuentes dependientes. El laboratorio te dice qué fila está mal y por qué." },
-    { id: "cap5", cap: "5", nombre: "Thévenin y Norton", color: "#00838F",
+    { id: "cap5", nombre: "Thévenin y Norton", color: "#00838F",
       descripcion: "Calcula v_oc, R_th e I_N, elige las terminales, apaga fuentes para ver la superposición y encuentra la potencia máxima." },
-    { id: "cap6", cap: "6", nombre: "Amplificador operacional", color: "#D81B60",
+    { id: "cap6", nombre: "Amplificador operacional", color: "#D81B60",
       descripcion: "Inversor, no inversor, sumador, diferencial y seguidor, con la saturación a ±Vsat a la vista." },
-    { id: "cap78", cap: "7–8", nombre: "Circuitos RC y RL", color: "#1E88E5",
+    { id: "cap78", nombre: "Circuitos RC y RL", color: "#1E88E5",
       descripcion: "Aplica el método v(0⁺), v(∞) y τ, y observa la respuesta después de un cambio de la fuente." },
-    { id: "cap9", cap: "9", nombre: "Circuitos RLC", color: "#6A1B9A",
+    { id: "cap9", nombre: "Circuitos RLC", color: "#6A1B9A",
       descripcion: "Mueve R, L y C y observa cómo se mueven las raíces en el plano s y cómo cambia la respuesta en el tiempo." },
-    { id: "cap10", cap: "10", nombre: "Análisis senoidal", color: "#14286B",
+    { id: "cap10", nombre: "Análisis senoidal", color: "#14286B",
       descripcion: "Impedancias y fasores que giran, desfase entre voltaje y corriente, triángulo de potencia y factor de potencia." },
   ];
 
@@ -33,14 +33,14 @@
   function inicio() {
     document.title = "Laboratorio de Circuitos · Fernando D. Hernández";
     raiz.replaceChildren(
-      h("div", { class: "lab-modulos" }, LISTA.map(m => {
+      h("div", { class: "lab-modulos" }, LISTA.map((m, i) => {
         const listo = !!MODULOS[m.id];
         return h(listo ? "a" : "div", { class: "lab-modulo", href: listo ? "#" + m.id : null, style: listo ? null : { opacity: 0.55 } },
-          h("div", { class: "cap", style: { background: m.color } }, h("small", { text: "Cap." }), h("b", { text: m.cap })),
+          h("div", { class: "cap", style: { background: m.color } }, h("small", { text: "Módulo" }), h("b", { text: String(i + 1) })),
           h("div", null, h("h3", { text: m.nombre }), h("p", { text: listo ? m.descripcion : "En preparación." })),
           listo ? h("span", { class: "ir", style: { color: m.color }, text: "›" }) : null);
       })),
-      Chico("Sigue los capítulos 1 a 10 de Dorf y Svoboda, Circuitos eléctricos (8.ª ed.). Los circuitos son originales y sus valores cambian en cada intento; cada problema tiene un número para repetirlo. Es el mismo número que en la app para Android."),
+      Chico("Los circuitos son originales y sus valores cambian en cada intento; cada problema tiene un número para repetirlo. Es el mismo número que en la app para Android."),
       Chico("Funciona en el navegador, sin instalar nada, y no recopila datos."),
     );
   }

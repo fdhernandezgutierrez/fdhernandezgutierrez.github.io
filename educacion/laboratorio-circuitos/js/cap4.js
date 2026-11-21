@@ -1,4 +1,4 @@
-/* cap4.js — Cap. 4: planteamiento A·x = b por nodos o mallas, revisión fila por fila y balance de potencia. */
+/* cap4.js — Módulo 3: planteamiento A·x = b por nodos o mallas, revisión fila por fila y balance de potencia. */
 (function (G) {
   "use strict";
   const L = G.LAB;
@@ -6,7 +6,7 @@
     dibujarEsquema, Cap4, revisarSistema, resolverCD, leerExpresion, coincide, listaTexto, semillaNueva, fmt } = L;
 
   (L.MODULOS = L.MODULOS || {}).cap4 = {
-    titulo: "Cap. 4 · Nodos y mallas",
+    titulo: "Nodos y mallas",
     montar(raiz, ctx) {
       // Variante en la dirección: «nodos», «mallas», «nodos-3»… (plantilla 3 = tercera de la lista).
       const [m0, p0] = (ctx.extra || "").split("-");

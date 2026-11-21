@@ -393,11 +393,11 @@
   }
 
   // ─────────────────────────────── Segundo orden ───────────────────────────────
-  // El orden importa: el cap. 9 elige el tipo con entero(3).
+  // El orden importa: el módulo RLC elige el tipo con entero(3).
   const AMORTIGUAMIENTOS = ["SOBREAMORTIGUADO", "CRITICO", "SUBAMORTIGUADO"];
   const NOMBRE_AMORT = { SOBREAMORTIGUADO: "Sobreamortiguado", CRITICO: "Críticamente amortiguado", SUBAMORTIGUADO: "Subamortiguado" };
 
-  /** Parámetros de s² + 2αs + ω0² = 0 (Dorf, cap. 9). */
+  /** Parámetros de s² + 2αs + ω0² = 0. */
   class SegundoOrden {
     constructor(alfa, omega0) { this.alfa = alfa; this.omega0 = omega0; }
     get zeta() { return this.alfa / this.omega0; }
@@ -417,7 +417,7 @@
     static paralelo(r, l, c) { return new SegundoOrden(1 / (2 * r * c), 1 / Math.sqrt(l * c)); }
   }
 
-  /** x(t) = x∞ + respuesta natural, con x(0) = x0 y dx/dt(0) = dx0 (constantes como en el libro). */
+  /** x(t) = x∞ + respuesta natural, con x(0) = x0 y dx/dt(0) = dx0 (constantes de la solución analítica). */
   class RespuestaSegundoOrden {
     constructor(so, xInf, x0, dx0) {
       this.so = so; this.xInf = xInf; this.x0 = x0; this.dx0 = dx0;

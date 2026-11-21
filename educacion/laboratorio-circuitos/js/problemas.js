@@ -1,5 +1,5 @@
 /* ==========================================================================
-   problemas.js — generadores de problemas por capítulo (Dorf, caps. 1 a 10).
+   problemas.js — generadores de problemas de cada módulo.
    Mismo orden de sorteos que la app Android: el mismo número de problema
    produce el mismo circuito en ambas versiones.
    © 2026 Fernando Daniel Hernández Gutiérrez
@@ -13,10 +13,10 @@
     Azar, siguienteSemilla, P, Esquema,
   } = LAB;
 
-  // ───────────────────────────── Caps. 1–2 ─────────────────────────────
+  // ───────────────────────────── Potencia ─────────────────────────────
   const TIPOS_ELEMENTO = ["GENERICO", "FUENTE_V", "FUENTE_I"];
 
-  /** Un elemento aislado con su voltaje y su corriente de referencia (cap. 1). */
+  /** Un elemento aislado con su voltaje y su corriente de referencia. */
   class EjercicioElemento {
     constructor(tipo, v, i, masIzquierda, corrienteDerecha, semilla) {
       Object.assign(this, { tipo, v, i, masIzquierda, corrienteDerecha, semilla });
@@ -55,7 +55,7 @@
     }
   }
 
-  /** Balance de potencia en un circuito del cap. 4 con los voltajes de nodo ya conocidos. */
+  /** Balance de potencia en un circuito de nodos y mallas con los voltajes de nodo ya conocidos. */
   class EjercicioBalance {
     constructor(construido, semilla) {
       this.construido = construido;
@@ -80,7 +80,7 @@
     }
   }
 
-  // ───────────────────────────── Cap. 3 ─────────────────────────────
+  // ───────────────────────────── Circuitos resistivos ─────────────────────────────
   // Red serie-paralelo como árbol: {t:"R", nombre, valor} | {t:"S", hijos} | {t:"P", hijos}
   const Red = {
     R: (nombre, valor) => ({ t: "R", nombre, valor }),
@@ -215,7 +215,7 @@
     },
   };
 
-  // ───────────────────────────── Cap. 4 ─────────────────────────────
+  // ───────────────────────────── Nodos y mallas ─────────────────────────────
   const fuenteVAleatoria = (e, z, nombre, arriba, abajo, v, lado) => {
     if (z.moneda()) e.fuenteV(nombre, arriba, abajo, v, { lado }); else e.fuenteV(nombre, abajo, arriba, v, { lado });
   };
@@ -429,7 +429,7 @@
     },
   };
 
-  // ───────────────────────────── Cap. 5 ─────────────────────────────
+  // ───────────────────────────── Thévenin y Norton ─────────────────────────────
   class ProblemaCap5 {
     constructor(titulo, indice, construido, a, b, equivalente, rthSinDependientes, semilla) {
       Object.assign(this, { titulo, indice, construido, a, b, equivalente, rthSinDependientes, semilla });
@@ -537,7 +537,7 @@
     },
   };
 
-  // ───────────────────────────── Cap. 6 ─────────────────────────────
+  // ───────────────────────────── Amplificador operacional ─────────────────────────────
   const CONFIGURACIONES = [
     { id: "INVERSOR", titulo: "Inversor", entradas: 1 },
     { id: "NO_INVERSOR", titulo: "No inversor", entradas: 1 },
@@ -551,7 +551,7 @@
   class CircuitoAmpOp {
     constructor(conf, r1, rf, r3, r4, v1, v2, vsat) { Object.assign(this, { conf, r1, rf, r3, r4, v1, v2, vsat }); }
     con(cambios) { return Object.assign(new CircuitoAmpOp(), this, cambios); }
-    /** Fórmula del libro para la salida ideal. */
+    /** Fórmula de la salida ideal. */
     get formula() {
       const { r1, rf, r3, r4, v1, v2 } = this;
       switch (this.conf.id) {
@@ -652,7 +652,7 @@
     },
   };
 
-  // ───────────────────────────── Caps. 7–8 ─────────────────────────────
+  // ───────────────────────────── Circuitos RC y RL ─────────────────────────────
   /** Fuente vs — R1 — nodo — (R2 ∥ C) o (R2 ∥ L); la fuente vale vAntes para t < 0 y vDespues para t > 0. */
   class PrimerOrden {
     constructor(rc, r1, r2, x, vAntes, vDespues) { Object.assign(this, { rc, r1, r2, x, vAntes, vDespues }); }
@@ -703,7 +703,7 @@
     inicial(rc) { return rc ? new PrimerOrden(true, 4e3, 4e3, 10e-6, 0, 12) : new PrimerOrden(false, 4, 4, 10e-3, 0, 12); },
   };
 
-  // ───────────────────────────── Cap. 9 ─────────────────────────────
+  // ───────────────────────────── Circuitos RLC ─────────────────────────────
   class Rlc {
     constructor(serie, r, l, c, fuente, v0, i0) { Object.assign(this, { serie, r, l, c, fuente, v0, i0 }); }
     con(cambios) { return Object.assign(new Rlc(), this, cambios); }
@@ -756,7 +756,7 @@
     },
   };
 
-  // ───────────────────────────── Cap. 10 ─────────────────────────────
+  // ───────────────────────────── Análisis senoidal ─────────────────────────────
   /** RLC serie en estado estable senoidal: vs(t) = Vm·cos(ωt). l o c en null: ese elemento no está. */
   class CircuitoCA {
     constructor(r, l, c, vm, omega) { Object.assign(this, { r, l, c, vm, omega }); }

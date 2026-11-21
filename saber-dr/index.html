@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SABER-DR · Fernando D. Hernández</title>
+<meta name="description" content="SABER-DR: clasificación automática de la retinopatía diabética en cinco grados con aprendizaje ordinal y expertos en las fronteras entre grados. Aplicación web y Android.">
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/estilos.css">
+</head>
+<body data-pagina="saber-dr" data-menu="proyectos" data-raiz="../">
+<a class="saltar" href="#contenido">Saltar al contenido</a>
+<div id="barra"></div>
+
+<header class="cabecera-pagina">
+  <div class="ancho">
+    <p class="sobretitulo">Proyecto de investigación</p>
+    <h1>SABER-DR</h1>
+    <p>Clasificación automática de la retinopatía diabética en los cinco grados de la escala internacional (ICDR) a partir de una retinografía.</p>
+  </div>
+</header>
+
+<main id="contenido">
+  <section class="seccion primera">
+    <div class="ancho">
+      <figure class="figura">
+        <a href="img/resultado.jpg" title="Ver la imagen en tamaño completo"><img src="img/resultado.jpg" width="1280" height="1030" alt="Pantalla de resultados de SABER-DR: a la izquierda la retinografía analizada; a la derecha el grado 3, retinopatía diabética no proliferativa severa, con probabilidad de 63.9 %, retinopatía referible, cinco de cinco modelos de acuerdo, calidad de imagen adecuada y la probabilidad de cada grado."></a>
+        <figcaption>Pantalla de resultados de la aplicación web con una retinografía del conjunto de prueba de APTOS 2019. El grado estimado coincide con el grado real: retinopatía diabética no proliferativa severa.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="ancho">
+      <div class="cabeza"><div><span class="num">Método</span><h2>Cómo funciona</h2></div></div>
+      <ol class="pasos">
+        <li><b>Preprocesamiento</b><span>Recorte de los bordes negros, mejora del contraste con CLAHE en el espacio de color LAB y redimensionado a 224 × 224 píxeles.</span></li>
+        <li><b>Red troncal</b><span>Una EfficientNet-B0 extrae las características de la retina; una cabeza global y una cabeza ordinal estiman el grado respetando el orden de la escala.</span></li>
+        <li><b>Expertos de frontera</b><span>Cuatro expertos (E01, E12, E23 y E34) se especializan cada uno en distinguir dos grados contiguos; una compuerta decide cuánto interviene cada uno.</span></li>
+        <li><b>Resultado</b><span>Grado estimado, probabilidad de cada grado, si la retinopatía es referible (moderada o mayor), consenso entre modelos y calidad de la imagen.</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="ancho">
+      <div class="cabeza"><div><span class="num">Interpretabilidad</span><h2>Mapas de atención</h2></div></div>
+      <figure class="figura">
+        <a href="img/atencion.jpg" title="Ver la imagen en tamaño completo"><img src="img/atencion.jpg" width="1216" height="450" loading="lazy" alt="Imagen de entrada preprocesada y mapas de atención de los cuatro expertos de frontera: E01, sin retinopatía frente a leve; E12, leve frente a moderada; E23, moderada frente a severa; y E34, severa frente a proliferativa, que es el que más interviene."></a>
+        <figcaption>Imagen preprocesada y mapas de atención de los cuatro expertos para la misma retinografía. En este caso interviene sobre todo E34, el experto que separa la retinopatía severa de la proliferativa.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="seccion" id="versiones">
+    <div class="ancho">
+      <div class="cabeza"><div><span class="num">Versiones</span><h2>Web y Android</h2></div></div>
+      <div class="recursos">
+        <article class="recurso">
+          <div class="ilus">
+            <svg viewBox="0 0 60 60" aria-hidden="true">
+              <rect x="6" y="11" width="48" height="36" rx="4" fill="none" stroke="#5eead4" stroke-width="2.4"/>
+              <path d="M6 19h48" stroke="#5eead4" stroke-width="2.4"/>
+              <circle cx="22" cy="33" r="8" fill="none" stroke="#f97362" stroke-width="2.4"/>
+              <circle cx="22" cy="33" r="2.6" fill="#f97362"/>
+              <path d="M36 28h12M36 33h9M36 38h12" stroke="#5eead4" stroke-width="2.4" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div>
+            <span class="estado">Prototipo de investigación</span>
+            <h3>Aplicación web</h3>
+            <p>Servidor con un ensamble de cinco modelos entrenados con validación cruzada estratificada en APTOS 2019. Muestra el grado, las probabilidades, el acuerdo entre modelos y los mapas de atención. La imagen se procesa en memoria y no se guarda.</p>
+            <div class="tags"><span>Ensamble de 5 modelos</span><span>Mapas de atención</span><span>Control de calidad de imagen</span></div>
+            <div class="botones"><a class="btn prim" href="../contacto.html">Solicitar una demostración →</a></div>
+          </div>
+        </article>
+        <article class="recurso">
+          <div class="ilus">
+            <svg viewBox="0 0 60 60" aria-hidden="true">
+              <rect x="17" y="6" width="26" height="48" rx="5" fill="none" stroke="#5eead4" stroke-width="2.4"/>
+              <path d="M26 11h8" stroke="#5eead4" stroke-width="2.4" stroke-linecap="round"/>
+              <circle cx="30" cy="28" r="7" fill="none" stroke="#f97362" stroke-width="2.4"/>
+              <circle cx="30" cy="28" r="2.4" fill="#f97362"/>
+              <path d="M23 42h14" stroke="#5eead4" stroke-width="2.4" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div>
+            <span class="estado">En desarrollo</span>
+            <h3>Aplicación Android</h3>
+            <p>El modelo se ejecuta en el propio teléfono con ONNX Runtime, sin conexión a internet: la retinografía nunca sale del dispositivo. El preprocesamiento reproduce exactamente el de la versión web.</p>
+            <div class="tags"><span>ONNX Runtime</span><span>Sin conexión</span><span>Privacidad</span></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="ancho">
+      <div class="aviso-investigacion">
+        <p><b>Herramienta de investigación.</b> No constituye un diagnóstico médico ni sustituye la valoración de un oftalmólogo.</p>
+        <p>SABER-DR forma parte de la tesis doctoral <a href="../publicaciones.html#pub-TESIS2026">«Identificación automática de retinopatías utilizando imágenes del fondo de la retina y aprendizaje profundo»</a>, Doctorado en Ingeniería Eléctrica, Universidad de Guanajuato. Director: Dr. Juan Gabriel Aviña Cervantes; codirector: Dr. José Ruiz Pinales.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="pie"></div>
+<script src="../assets/js/datos.js"></script>
+<script src="../assets/js/sitio.js"></script>
+</body>
+</html>

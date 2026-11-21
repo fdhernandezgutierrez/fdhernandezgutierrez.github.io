@@ -1,4 +1,4 @@
-/* cap10.js — Cap. 10: análisis senoidal en estado estable (fasores que giran, potencia y práctica). */
+/* cap10.js — Módulo 8: análisis senoidal en estado estable (fasores que giran, potencia y práctica). */
 (function (G) {
   "use strict";
   const L = G.LAB;
@@ -11,7 +11,7 @@
   const rectangular = (z, u) => `${fmt(z.re, 4)} ${z.im < 0 ? "−" : "+"} j${fmt(Math.abs(z.im), 4)} ${u}`;
 
   (L.MODULOS = L.MODULOS || {}).cap10 = {
-    titulo: "Cap. 10 · Análisis senoidal",
+    titulo: "Análisis senoidal",
     montar(raiz, ctx) {
       let modo = ctx.extra === "practicar" ? 1 : 0;
       let pr = null, entrada, revision, pista, verSolucion;

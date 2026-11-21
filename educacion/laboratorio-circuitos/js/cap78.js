@@ -1,4 +1,4 @@
-/* cap78.js — Caps. 7 y 8: circuitos RC y RL (método de los tres valores y simulación). */
+/* cap78.js — Módulo 6: circuitos RC y RL (método de los tres valores y simulación). */
 (function (G) {
   "use strict";
   const L = G.LAB;
@@ -13,7 +13,7 @@
   }
 
   (L.MODULOS = L.MODULOS || {}).cap78 = {
-    titulo: "Caps. 7 y 8 · Circuitos RC y RL",
+    titulo: "Circuitos RC y RL",
     montar(raiz, ctx) {
       let modo = ctx.extra === "practicar" ? 1 : 0;
       let rc = true;

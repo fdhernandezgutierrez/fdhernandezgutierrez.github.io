@@ -332,3 +332,20 @@ footer.final{background:var(--tinta);color:#9aa6bf;margin-top:96px;padding:56px 
 .datos-curso b{color:var(--tinta)}
 @media (max-width:960px){ .recursos,.capitulos{grid-template-columns:1fr} }
 @media (max-width:560px){ .recurso{grid-template-columns:1fr;padding:22px} }
+
+/* ---------- Páginas de proyecto (SABER-DR) ---------- */
+.figura{margin:0}
+.figura img{display:block;width:100%;height:auto;border-radius:16px;border:1px solid var(--linea);box-shadow:0 18px 44px rgba(10,15,30,.10);background:var(--blanco)}
+.figura figcaption{font-size:14.5px;color:var(--suave);margin-top:14px;max-width:820px;line-height:1.55}
+.pasos{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:18px;counter-reset:paso}
+.pasos li{background:var(--blanco);border:1px solid var(--linea);border-radius:16px;padding:22px;counter-increment:paso}
+.pasos li::before{content:counter(paso);display:grid;place-items:center;width:36px;height:36px;border-radius:10px;background:var(--tinta);color:var(--turquesa-2);
+                  font-family:var(--titulo);font-weight:700;margin-bottom:14px}
+.pasos b{display:block;font-family:var(--titulo);font-size:18px;color:var(--tinta);margin-bottom:6px}
+.pasos span{font-size:14.5px;color:#3c4659;line-height:1.55}
+.aviso-investigacion{border-left:4px solid var(--coral);background:var(--blanco);border-radius:0 14px 14px 0;padding:20px 24px;max-width:900px}
+.aviso-investigacion p{margin:0;color:#3c4659}
+.aviso-investigacion p+p{margin-top:10px;font-size:14.5px;color:var(--suave)}
+.aviso-investigacion a{color:var(--turquesa-osc);font-weight:600}
+@media (max-width:1060px){ .pasos{grid-template-columns:repeat(2,1fr)} }
+@media (max-width:560px){ .pasos{grid-template-columns:1fr} .figura img{border-radius:10px} }

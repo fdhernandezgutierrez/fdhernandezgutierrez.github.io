@@ -1,4 +1,4 @@
-/* cap5.js — Cap. 5: Thévenin y Norton (practicar y explorar terminales, superposición y máxima potencia). */
+/* cap5.js — Módulo 4: Thévenin y Norton (practicar y explorar terminales, superposición y máxima potencia). */
 (function (G) {
   "use strict";
   const L = G.LAB;
@@ -67,7 +67,7 @@
   }
 
   (L.MODULOS = L.MODULOS || {}).cap5 = {
-    titulo: "Cap. 5 · Thévenin y Norton",
+    titulo: "Thévenin y Norton",
     montar(raiz, ctx) {
       let modo = (ctx.extra || "").startsWith("explorar") ? 1 : 0;
       let plantilla = Number((ctx.extra || "").replace(/\D/g, "")) || 0;

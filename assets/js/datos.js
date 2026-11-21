@@ -60,6 +60,8 @@ window.PERFIL = {
   noticias: [
     { fecha: "2026-11", texto: "Examen de grado de Doctorado en Ingeniería Eléctrica, Universidad de Guanajuato." },
     { fecha: "2026-10", texto: "Ponencia oral de FAR-UNet en el 7th Mexican Workshop on Fractional Calculus (7MWFC-2026), Cancún." },
+    { fecha: "2026",    texto: "Codirector de la tesis de maestría de Simon Tshibengabu Kalonji sobre la localización automática de puntos cefalométricos con aprendizaje profundo (Maestría en Ingeniería Eléctrica, UG)." },
+    { fecha: "2026",    texto: "Instructor del curso propedéutico de Electrónica Digital para aspirantes a la Maestría en Ingeniería Eléctrica, UG." },
     { fecha: "2026-07", texto: "Publicado en <em>Mathematics</em>: ResGASP-GAN, mejora de imágenes con poca iluminación." },
     { fecha: "2026-01", texto: "Publicado en <em>Technologies</em>: ConvNeXt multiescala para segmentar tumores cerebrales en resonancia magnética." },
     { fecha: "2025-11", texto: "Publicado en <em>Jóvenes en la Ciencia</em>: segmentación y clasificación de imágenes de resonancia magnética (Verano de la Ciencia UG)." },

@@ -221,7 +221,11 @@
       poner("#bio", P.bio.map(p => `<p>${p}</p>`).join(""));
       poner("#formacion", P.formacion.map(f =>
         `<li><time>${f.periodo}</time><b>${f.grado}</b><span>${f.lugar}${f.detalle ? `<br><small>${f.detalle}</small>` : ""}</span></li>`).join(""));
+      poner("#direccion", cronologia(P.direccion));
+      poner("#docencia", P.docencia.map(d => `<li><time>${d.periodo}</time><b>${d.curso}</b><span>${d.lugar}</span></li>`).join(""));
       poner("#premios", cronologia(P.premios));
+      // Una lista vacía no se muestra, ni su título
+      $$("ul.cronologia").forEach(ul => { if (!ul.innerHTML.trim()) { ul.hidden = true; const t = ul.previousElementSibling; if (t && t.classList.contains("cabeza")) t.hidden = true; } });
       poner("#habilidades", P.habilidades.map(h => `<dt>${h.area}</dt><dd>${h.texto}</dd>`).join(""));
       poner("#intereses", P.intereses.map(i => `<span>${i}</span>`).join(""));
       poner("#servicio", P.revision.map(s => `<li>${s.titulo}<small>${s.texto}</small></li>`).join(""));
@@ -262,9 +266,6 @@
 
     proyectos() {
       poner("#lista-investigacion", cronologia(P.proyectosInvestigacion));
-      poner("#lista-direccion", cronologia(P.direccion));
-      poner("#lista-docencia", P.docencia.map(d => `
-        <div class="proy claro"><small>${d.periodo}</small><b>${d.curso}</b><p>${d.lugar}</p></div>`).join(""));
       poner("#lista-proyectos", P.proyectos.map(p => `
         <div class="proy"><small>${p.etiqueta}</small><b>${p.titulo}</b><p>${p.texto}</p>
           ${p.enlace ? `<a href="${p.enlace}" target="_blank" rel="noopener">Ver proyecto →</a>` : ""}</div>`).join(""));

@@ -462,7 +462,8 @@ let partida = null;
 let temporizador = null;
 
 /** ¿La letra en la posición i suena «suave» (CE, CI, GE, GI)? */
-const esSuave = (letras, i) => 'EIÉÍ'.includes(letras[i + 1] || '');
+// Ojo: ''.includes('') es true; al final de la palabra no hay letra siguiente y no es suave.
+const esSuave = (letras, i) => i + 1 < letras.length && 'EIÉÍ'.includes(letras[i + 1]);
 
 /**
  * Letras que confunden con las de la palabra, con su prioridad (0 = primero):
@@ -492,7 +493,7 @@ function parecidasDe(letras) {
     else if (l === 'Q') { agregar('K', 2); agregar('C', 2); }
     else if (l === 'G' && suave) agregar('J', 1);
     else if (l === 'J' && suave) agregar('G', 1);
-    else if (l === 'M' && 'BP'.includes(sig)) agregar('N', 1);
+    else if (l === 'M' && sig && 'BP'.includes(sig)) agregar('N', 1);
   });
   return salida;
 }
@@ -558,7 +559,7 @@ function explicarError() {
     const comoK = (l) => 'KQ'.includes(l) || (l === 'C' && !suave);
     if (comoK(e) && comoK(x)) return regla(e, x, 'La C (en CA, CO y CU), la K y la Q suenan igual.');
     if (suave && 'GJ'.includes(e) && 'GJ'.includes(x)) return regla(e, x, 'La G y la J suenan igual en GE y GI.');
-    if (e === 'M' && x === 'N' && 'BP'.includes(L[i + 1] || '')) {
+    if (e === 'M' && x === 'N' && L[i + 1] && 'BP'.includes(L[i + 1])) {
       return {
         texto: `<b>${PAL}</b> se escribe con <b>M</b>: antes de B y de P siempre va M.`,
         voz: `${palabra} se escribe con eme: antes de be y de pe siempre va eme.`,

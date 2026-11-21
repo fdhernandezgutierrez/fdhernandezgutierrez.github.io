@@ -239,7 +239,7 @@ window.PERFIL = {
   proyectos: [
     { titulo: "SABER-DR Web", texto: "Aplicación web que gradúa la retinopatía diabética con un ensamble de cinco modelos.", etiqueta: "Software", enlace: "" },
     { titulo: "SABER-DR Android", texto: "Clasificación en el teléfono con ONNX, sin conexión a internet.", etiqueta: "Software", enlace: "" },
-    { titulo: "Laboratorio de Circuitos", texto: "Aplicación Android de apoyo al curso de Circuitos Eléctricos.", etiqueta: "Docencia", enlace: "" }
+    { titulo: "Laboratorio de Circuitos", texto: "Práctica guiada de Circuitos Eléctricos (Dorf, caps. 1 a 10), para Android y en el navegador.", etiqueta: "Docencia", enlace: "educacion/laboratorio-circuitos/index.html" }
   ],
 
   revision: [

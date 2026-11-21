@@ -1,0 +1,119 @@
+/* Demostración de SABER-DR en el navegador — © 2026 Fernando Daniel Hernández Gutiérrez */
+.demo{display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);gap:22px;align-items:start}
+.demo-panel{background:var(--blanco);border:1px solid var(--linea);border-radius:16px;overflow:hidden}
+.demo-panel.arrastrando{border-color:var(--turquesa);box-shadow:0 0 0 3px rgba(20,184,166,.18)}
+.demo-titulo{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:16px 22px;border-bottom:1px solid var(--linea)}
+.demo-titulo h3{margin:0;font-family:var(--titulo);font-size:18px;color:var(--tinta);padding-left:12px;border-left:4px solid var(--turquesa);line-height:1.1}
+.demo-titulo small{color:var(--suave);font-size:13px;text-align:right}
+.demo-cuerpo{padding:20px 22px 22px}
+
+/* Carga */
+.zona{border:2px dashed #cfd7e4;border-radius:14px;padding:30px 18px;text-align:center;background:#f8fafc;display:flex;flex-direction:column;align-items:center;gap:10px}
+.zona svg{width:46px;height:46px;padding:10px;border-radius:50%;background:#e9eef6;color:var(--tinta)}
+.zona p{margin:0;font-weight:600;color:var(--tinta)}
+.zona small{color:var(--suave);font-size:12.5px}
+.zona .btn{cursor:pointer}
+.vista img{display:block;width:100%;max-height:340px;object-fit:contain;background:#000;border-radius:12px}
+.vista-pie{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px;padding:10px 12px;border:1px solid var(--linea);border-radius:10px}
+.vista-pie b{display:block;font-size:14px;color:var(--tinta);word-break:break-all}
+.vista-pie small{color:var(--suave);font-size:12.5px}
+.btn.chico{padding:7px 14px;font-size:13.5px}
+.ejemplos{margin-top:20px;padding-top:16px;border-top:1px solid var(--linea)}
+.ejemplos p{margin:0 0 10px;font-size:13.5px;font-weight:600;color:var(--tinta)}
+.ejemplos-lista{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.ejemplos-lista button{position:relative;padding:0;border:2px solid transparent;border-radius:10px;overflow:hidden;background:#000;cursor:pointer;aspect-ratio:1;transition:border-color .15s,transform .15s}
+.ejemplos-lista button:hover{transform:translateY(-2px)}
+.ejemplos-lista button:focus-visible{outline:3px solid var(--turquesa);outline-offset:2px}
+.ejemplos-lista button.activo{border-color:var(--turquesa)}
+.ejemplos-lista img{display:block;width:100%;height:100%;object-fit:cover}
+.ejemplos-lista .grado{position:absolute;top:5px;left:5px}
+
+/* Insignia de grado: escala ordinal de un tono */
+.grado{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--c);color:var(--t);font-family:var(--titulo);font-weight:700;font-size:12px;flex:none;box-shadow:0 0 0 2px var(--blanco)}
+.grado.chica{width:20px;height:20px;font-size:11px}
+.grado.grande{width:54px;height:54px;border-radius:12px;font-size:28px;box-shadow:none}
+
+/* Estados */
+.demo-estado{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+.demo-estado b{font-family:var(--titulo);font-size:19px;color:var(--tinta)}
+.demo-estado p{margin:0;color:#3c4659}
+.demo-estado small{color:var(--suave);font-size:13px}
+.demo-estado .btn{margin-top:6px;cursor:pointer}
+.demo-estado.error b{color:#9b2c1d}
+.progreso{width:100%;height:10px;border-radius:6px;background:#e9eef6;overflow:hidden;margin-top:6px}
+.progreso i{display:block;height:100%;width:0;background:var(--turquesa);border-radius:6px;transition:width .2s}
+.girando{width:34px;height:34px;border-radius:50%;border:4px solid #e2e7f0;border-top-color:var(--turquesa);animation:girar 1s linear infinite;margin-top:6px}
+@keyframes girar{to{transform:rotate(360deg)}}
+.demo-sub{margin:22px 0 10px;font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--suave)}
+.escala-lista{list-style:none;margin:0;padding:0;border:1px solid var(--linea);border-radius:12px}
+.escala-lista li{display:flex;align-items:center;gap:12px;padding:10px 14px;color:var(--texto);font-size:14.5px}
+.escala-lista li+li{border-top:1px solid var(--linea)}
+
+/* Resultado */
+.grado-tarjeta{display:flex;align-items:center;gap:16px;padding:16px;border-radius:12px;background:#f5f7fb;border-left:4px solid var(--tinta)}
+.grado-tarjeta small{display:block;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--suave);font-weight:600}
+.grado-tarjeta b{display:block;font-family:var(--titulo);font-size:21px;color:var(--tinta);line-height:1.2}
+.grado-tarjeta span:not(.grado){font-size:14px;color:#3c4659}
+.filas{margin:14px 0 0;border:1px solid var(--linea);border-radius:12px}
+.filas div{display:grid;grid-template-columns:140px 1fr;gap:10px;padding:10px 14px;align-items:center}
+.filas div+div{border-top:1px solid var(--linea)}
+.filas dt{color:var(--suave);font-size:14px}
+.filas dd{margin:0;display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;font-size:14.5px}
+.filas dd b{color:var(--tinta)}
+.filas dd small{color:var(--suave);font-size:13px}
+.icono{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;color:#fff;font-size:12px;font-weight:700;flex:none}
+.icono.bien{background:#12805c}
+.icono.grave{background:#c2410c}
+.icono.aviso{background:#b45309}
+.icono.mal{background:#b91c1c}
+.avisos{margin:10px 0 0;padding:10px 14px 10px 32px;background:#fff7ed;border-radius:10px;color:#7c2d12;font-size:13.5px}
+.avisos li+li{margin-top:4px}
+.barras{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.barras li{display:grid;grid-template-columns:22px 92px 1fr 62px;gap:10px;align-items:center;font-size:14px;color:#3c4659}
+.barras .pista{height:12px;background:#eef2f7;border-radius:0 4px 4px 0;overflow:hidden}
+.barras .pista i{display:block;height:100%;border-radius:0 4px 4px 0}
+.barras .valor{text-align:right;font-variant-numeric:tabular-nums}
+.barras li.elegido .nombre,.barras li.elegido .valor{color:var(--tinta);font-weight:700}
+.severidad{position:relative;padding-top:30px}
+.segmentos{display:grid;grid-template-columns:repeat(5,1fr);gap:2px;height:10px}
+.segmentos i:first-child{border-radius:5px 0 0 5px}
+.segmentos i:last-child{border-radius:0 5px 5px 0}
+.marca{position:absolute;top:0;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center}
+.marca b{background:var(--tinta);color:#fff;font-size:12px;padding:2px 7px;border-radius:6px;font-variant-numeric:tabular-nums}
+.marca::after{content:"";width:2px;height:18px;background:var(--tinta);margin-top:1px}
+.rotulos{display:grid;grid-template-columns:repeat(5,1fr);margin-top:6px;font-size:12px;color:var(--suave);text-align:center}
+.demo-aviso{margin:18px 0 0;font-size:13px;color:var(--suave)}
+.demo-acciones{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.demo-acciones .btn{cursor:pointer}
+
+/* Mapas de atención */
+.mapas{margin-top:22px}
+.mapas-lista{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
+.mapa{margin:0;border:1px solid var(--linea);border-radius:12px;overflow:hidden;background:var(--blanco)}
+.mapa.mayor{border:2px solid #f2b705}
+.mapa canvas{display:block;width:100%;height:auto;aspect-ratio:1}
+.mapa figcaption{padding:10px 12px 12px;font-size:13px}
+.mapa figcaption div{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.mapa figcaption b{color:var(--tinta)}
+.mapa figcaption small{display:block;color:var(--suave)}
+.sello-mayor{background:#f2b705;color:var(--tinta);font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:1px 6px;border-radius:4px}
+.compuerta{display:block;height:5px;background:#eef2f7;border-radius:3px;margin:8px 0 4px;overflow:hidden}
+.compuerta i{display:block;height:100%;background:var(--tinta);border-radius:3px}
+.mapas-leyenda{display:flex;align-items:center;gap:8px;margin-top:14px;font-size:13px;color:#3c4659}
+.mapas-leyenda small{color:var(--suave)}
+.mapas-leyenda i{width:150px;height:8px;border-radius:4px;background:linear-gradient(90deg,#000004,#420a68,#932667,#dd513a,#fca50a,#fcffa4)}
+.demo-nota{max-width:900px}
+button.enlace{background:none;border:0;padding:0;margin-left:6px;color:var(--turquesa-osc);font:inherit;font-weight:600;cursor:pointer;text-decoration:underline}
+
+@media (max-width:960px){
+  .demo{grid-template-columns:minmax(0,1fr)}
+  .mapas-lista{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media (max-width:560px){
+  .demo-cuerpo{padding:16px}
+  .demo-titulo{padding:14px 16px}
+  .mapas-lista{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .filas div{grid-template-columns:1fr;gap:4px}
+  .barras li{grid-template-columns:22px 78px 1fr 54px;gap:8px}
+  .rotulos span{font-size:10.5px}
+}

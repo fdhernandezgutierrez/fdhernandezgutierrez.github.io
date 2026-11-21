@@ -1,0 +1,37 @@
+{
+ "version": "2501592fe8b9",
+ "bytes": 267771707,
+ "sha256": "2501592fe8b943b5a16ec4076638a66c4e5b26584aca4aa0cb4b27d46cb25269",
+ "partes": [
+  {
+   "archivo": "saber_dr.onnx.001",
+   "bytes": 47185920,
+   "sha256": "33a643d3cb8e435bd86d325d731a83371fb64d659e98b58dd282e43f5e725736"
+  },
+  {
+   "archivo": "saber_dr.onnx.002",
+   "bytes": 47185920,
+   "sha256": "beb318a1dd15ce778b91b650266bccc75a4574c0d200953773acb733b53a60e2"
+  },
+  {
+   "archivo": "saber_dr.onnx.003",
+   "bytes": 47185920,
+   "sha256": "80a75942cf535062a117c5908b3a369422bec36741e0cdad757aca0806698942"
+  },
+  {
+   "archivo": "saber_dr.onnx.004",
+   "bytes": 47185920,
+   "sha256": "22ce5f206410078842862a97288650bb16dceefd26ef004aa2e5d8a08d9a4d21"
+  },
+  {
+   "archivo": "saber_dr.onnx.005",
+   "bytes": 47185920,
+   "sha256": "25d8816eb5e9e4616375dbe8859c23bce437455e8608b18b990e6d8e646f582d"
+  },
+  {
+   "archivo": "saber_dr.onnx.006",
+   "bytes": 31842107,
+   "sha256": "912b409e7d9dcb7176b8cb6ee45aa4e87644efafc75ffc5eea7bcfdea5a2ee00"
+  }
+ ]
+}

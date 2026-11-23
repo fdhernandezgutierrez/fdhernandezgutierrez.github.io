@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Contacto · Fernando D. Hernández</title>
-<meta name="description" content="Contacto para colaboraciones de investigación, dirección de tesis y actividades académicas.">
+<title data-es="Contacto · Fernando D. Hernández">Contact · Fernando D. Hernández</title>
+<meta name="description" content="Contact for research collaborations, thesis supervision, and academic activities." data-es-content="Contacto para colaboraciones de investigación, dirección de tesis y actividades académicas.">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,14 +12,14 @@
 <link rel="stylesheet" href="assets/css/estilos.css">
 </head>
 <body data-pagina="contacto">
-<a class="saltar" href="#contenido">Saltar al contenido</a>
+<a class="saltar" href="#contenido" data-es="Saltar al contenido">Skip to content</a>
 <div id="barra"></div>
 
 <header class="cabecera-pagina">
   <div class="ancho">
-    <p class="sobretitulo">Contacto</p>
-    <h1>Trabajemos juntos</h1>
-    <p>Colaboraciones de investigación, dirección de tesis, revisiones o asesoría en aprendizaje profundo.</p>
+    <p class="sobretitulo" data-es="Contacto">Contact</p>
+    <h1 data-es="Trabajemos juntos">Let’s work together</h1>
+    <p data-es="Colaboraciones de investigación, dirección de tesis, revisiones o asesoría en aprendizaje profundo.">Research collaborations, thesis supervision, reviews, or deep learning consulting.</p>
   </div>
 </header>
 
@@ -30,27 +30,27 @@
 
       <form class="tarjeta formulario" id="formulario" method="post" novalidate>
         <div class="fila">
-          <label>Nombre
+          <label><span data-es="Nombre">Name</span>
             <input name="nombre" type="text" required minlength="2" maxlength="100" autocomplete="name">
           </label>
-          <label>Correo electrónico
+          <label><span data-es="Correo electrónico">Email</span>
             <input name="email" type="email" required maxlength="150" autocomplete="email">
           </label>
         </div>
-        <label>Tema
+        <label><span data-es="Tema">Topic</span>
           <select name="asunto" id="asunto"></select>
         </label>
-        <label>Mensaje
+        <label><span data-es="Mensaje">Message</span>
           <textarea name="mensaje" required minlength="10" maxlength="5000"></textarea>
         </label>
         <!-- Campo trampa para robots: las personas no lo ven ni lo llenan -->
         <div class="trampa" aria-hidden="true">
-          <label>No llene este campo <input name="_gotcha" type="text" tabindex="-1" autocomplete="off"></label>
+          <label><span data-es="No llene este campo">Do not fill in this field</span> <input name="_gotcha" type="text" tabindex="-1" autocomplete="off"></label>
         </div>
         <div class="aviso-form" id="aviso-form" role="status" tabindex="-1"></div>
         <div class="pie-form">
           <p class="privacidad" id="privacidad"></p>
-          <button class="btn prim" type="submit">Enviar mensaje</button>
+          <button class="btn prim" type="submit" data-es="Enviar mensaje">Send message</button>
         </div>
       </form>
     </div>
@@ -59,6 +59,7 @@
 
 <div id="pie"></div>
 <script src="assets/js/datos.js"></script>
+<script src="assets/js/datos-en.js"></script>
 <script src="assets/js/sitio.js"></script>
 </body>
 </html>

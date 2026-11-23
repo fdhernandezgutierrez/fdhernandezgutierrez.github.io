@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Fernando D. Hernández · Visión por computadora y aprendizaje profundo</title>
-<meta name="description" content="Investigación en aprendizaje profundo para imágenes médicas: vasos retinales, retinopatía diabética y tumores cerebrales en resonancia magnética. Universidad de Guanajuato.">
-<meta property="og:title" content="Fernando Daniel Hernández Gutiérrez · Investigación">
-<meta property="og:description" content="Aprendizaje profundo eficiente para el análisis de imágenes médicas.">
+<title data-es="Fernando D. Hernández · Visión por computadora y aprendizaje profundo">Fernando D. Hernández · Computer Vision and Deep Learning</title>
+<meta name="description" content="Deep learning research for medical imaging: retinal vessels, diabetic retinopathy, and brain tumors in MRI. Universidad de Guanajuato." data-es-content="Investigación en aprendizaje profundo para imágenes médicas: vasos retinales, retinopatía diabética y tumores cerebrales en resonancia magnética. Universidad de Guanajuato.">
+<meta property="og:title" content="Fernando Daniel Hernández Gutiérrez · Research">
+<meta property="og:description" content="Efficient deep learning for medical image analysis.">
 <meta property="og:type" content="website">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,14 +18,14 @@
   "@context": "https://schema.org",
   "@type": "Person",
   "name": "Fernando Daniel Hernández Gutiérrez",
-  "jobTitle": "Candidato a Doctor en Ingeniería Eléctrica",
+  "jobTitle": "PhD Candidate in Electrical Engineering",
   "affiliation": { "@type": "CollegeOrUniversity", "name": "Universidad de Guanajuato" },
   "sameAs": ["https://orcid.org/0000-0001-9807-4048", "https://scholar.google.com/citations?user=Qr4X01QAAAAJ", "https://www.researchgate.net/profile/Fernando-Hernandez-Gutierrez"]
 }
 </script>
 </head>
 <body data-pagina="inicio">
-<a class="saltar" href="#contenido">Saltar al contenido</a>
+<a class="saltar" href="#contenido" data-es="Saltar al contenido">Skip to content</a>
 <div id="barra"></div>
 
 <header class="portada">
@@ -35,14 +35,14 @@
       <h1 id="nombre"></h1>
       <p class="lema" id="lema"></p>
       <div class="botones">
-        <a class="btn prim" href="publicaciones.html">Ver publicaciones →</a>
-        <a class="btn sec" href="contacto.html">Contacto</a>
+        <a class="btn prim" href="publicaciones.html" data-es="Ver publicaciones →">View publications →</a>
+        <a class="btn sec" href="contacto.html" data-es="Contacto">Contact</a>
       </div>
       <div class="redes" id="redes"></div>
     </div>
-    <div class="lienzo" id="lienzo" title="Mueva el cursor para comparar imagen y segmentación">
-      <canvas id="retina" width="880" height="880" role="img" aria-label="Ilustración: fondo de retina y su segmentación de vasos sanguíneos"></canvas>
-      <span class="rotulo r1">Imagen</span><span class="rotulo r2">Segmentación</span>
+    <div class="lienzo" id="lienzo" title="Move the cursor to compare the image and its segmentation" data-es-title="Mueva el cursor para comparar imagen y segmentación">
+      <canvas id="retina" width="880" height="880" role="img" aria-label="Illustration: retinal fundus image and its blood vessel segmentation" data-es-aria-label="Ilustración: fondo de retina y su segmentación de vasos sanguíneos"></canvas>
+      <span class="rotulo r1" data-es="Imagen">Image</span><span class="rotulo r2" data-es="Segmentación">Segmentation</span>
     </div>
   </div>
 </header>
@@ -53,13 +53,13 @@
   <section class="seccion">
     <div class="ancho dos-col">
       <div>
-        <div class="cabeza"><div><span class="num">01</span><h2>Sobre mí</h2></div></div>
+        <div class="cabeza"><div><span class="num">01</span><h2 data-es="Sobre mí">About me</h2></div></div>
         <div class="texto-largo" id="resumen"></div>
-        <a class="mas" href="sobre-mi.html">Más sobre mi trayectoria →</a>
+        <a class="mas" href="sobre-mi.html" data-es="Más sobre mi trayectoria →">More about my background →</a>
       </div>
       <div class="tarjeta perfil-inicio">
         <div class="foto foto-mini" id="foto"></div>
-        <h4>Intereses</h4>
+        <h4 data-es="Intereses">Interests</h4>
         <div class="pildoras" id="intereses"></div>
       </div>
     </div>
@@ -68,8 +68,8 @@
   <section class="seccion">
     <div class="ancho">
       <div class="cabeza">
-        <div><span class="num">02</span><h2>Líneas de investigación</h2></div>
-        <a class="mas" href="investigacion.html">Ver detalle →</a>
+        <div><span class="num">02</span><h2 data-es="Líneas de investigación">Research lines</h2></div>
+        <a class="mas" href="investigacion.html" data-es="Ver detalle →">See details →</a>
       </div>
       <div class="lineas-mini" id="lineas-mini"></div>
     </div>
@@ -78,8 +78,8 @@
   <section class="seccion">
     <div class="ancho">
       <div class="cabeza">
-        <div><span class="num">03</span><h2>Publicaciones recientes</h2></div>
-        <a class="mas" href="publicaciones.html">Ver todas →</a>
+        <div><span class="num">03</span><h2 data-es="Publicaciones recientes">Recent publications</h2></div>
+        <a class="mas" href="publicaciones.html" data-es="Ver todas →">See all →</a>
       </div>
       <div class="pubs" id="recientes"></div>
     </div>
@@ -87,15 +87,15 @@
 
   <section class="seccion">
     <div class="ancho">
-      <div class="cabeza"><div><span class="num">04</span><h2>Noticias</h2></div></div>
+      <div class="cabeza"><div><span class="num">04</span><h2 data-es="Noticias">News</h2></div></div>
       <ul class="cronologia" id="cronologia"></ul>
 
       <div class="cta">
         <div>
-          <h2>¿Le interesa colaborar?</h2>
-          <p>Proyectos conjuntos, dirección de tesis, revisiones o asesoría en aprendizaje profundo.</p>
+          <h2 data-es="¿Le interesa colaborar?">Interested in collaborating?</h2>
+          <p data-es="Proyectos conjuntos, dirección de tesis, revisiones o asesoría en aprendizaje profundo.">Joint projects, thesis supervision, reviews, or deep learning consulting.</p>
         </div>
-        <a class="btn prim" href="contacto.html">Escribirme →</a>
+        <a class="btn prim" href="contacto.html" data-es="Escribirme →">Get in touch →</a>
       </div>
     </div>
   </section>
@@ -103,6 +103,7 @@
 
 <div id="pie"></div>
 <script src="assets/js/datos.js"></script>
+<script src="assets/js/datos-en.js"></script>
 <script src="assets/js/sitio.js"></script>
 <script src="assets/js/retina.js"></script>
 </body>

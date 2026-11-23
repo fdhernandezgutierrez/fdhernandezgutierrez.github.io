@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Publicaciones · Fernando D. Hernández</title>
-<meta name="description" content="Artículos, ponencias, tesis y manuscritos de Fernando Daniel Hernández Gutiérrez, con DOI y referencias en BibTeX.">
+<title data-es="Publicaciones · Fernando D. Hernández">Publications · Fernando D. Hernández</title>
+<meta name="description" content="Articles, conference talks, theses, and manuscripts by Fernando Daniel Hernández Gutiérrez, with DOIs and BibTeX references." data-es-content="Artículos, ponencias, tesis y manuscritos de Fernando Daniel Hernández Gutiérrez, con DOI y referencias en BibTeX.">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,14 +12,14 @@
 <link rel="stylesheet" href="assets/css/estilos.css">
 </head>
 <body data-pagina="publicaciones">
-<a class="saltar" href="#contenido">Saltar al contenido</a>
+<a class="saltar" href="#contenido" data-es="Saltar al contenido">Skip to content</a>
 <div id="barra"></div>
 
 <header class="cabecera-pagina">
   <div class="ancho">
-    <p class="sobretitulo">Publicaciones</p>
-    <h1>Artículos, tesis y manuscritos</h1>
-    <p>Use «Citar» para copiar la referencia en BibTeX.</p>
+    <p class="sobretitulo" data-es="Publicaciones">Publications</p>
+    <h1 data-es="Artículos, tesis y manuscritos">Articles, theses, and manuscripts</h1>
+    <p data-es="Use «Citar» para copiar la referencia en BibTeX.">Use “Cite” to copy the BibTeX reference.</p>
   </div>
 </header>
 
@@ -28,9 +28,9 @@
     <div class="ancho">
       <div class="cabeza">
         <div class="controles">
-          <div class="pestanas" id="pestanas" role="group" aria-label="Filtrar por tipo"></div>
+          <div class="pestanas" id="pestanas" role="group" aria-label="Filter by type" data-es-aria-label="Filtrar por tipo"></div>
         </div>
-        <input class="buscar" id="buscar" type="search" placeholder="Buscar por título, revista o tema…" aria-label="Buscar publicaciones">
+        <input class="buscar" id="buscar" type="search" placeholder="Search by title, journal, or topic…" data-es-placeholder="Buscar por título, revista o tema…" aria-label="Search publications" data-es-aria-label="Buscar publicaciones">
       </div>
       <p class="conteo" id="conteo" aria-live="polite"></p>
       <div class="pubs" id="pubs"></div>
@@ -41,6 +41,7 @@
 
 <div id="pie"></div>
 <script src="assets/js/datos.js"></script>
+<script src="assets/js/datos-en.js"></script>
 <script src="assets/js/sitio.js"></script>
 </body>
 </html>

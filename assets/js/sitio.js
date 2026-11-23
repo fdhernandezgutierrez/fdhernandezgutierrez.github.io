@@ -1,12 +1,81 @@
 /* ==========================================================================
-   sitio.js — menú, pie de página y contenido de cada página.
-   El contenido se toma de datos.js; aquí no hace falta editar nada,
-   salvo para agregar o quitar páginas del menú (lista MENU).
+   sitio.js — menú, pie de página, idioma y contenido de cada página.
+   El contenido se toma de datos.js (español) y datos-en.js (inglés);
+   aquí no hace falta editar nada, salvo para agregar o quitar páginas del
+   menú (lista MENU) o cambiar textos fijos de la interfaz (lista TEXTOS).
    © 2026 Fernando Daniel Hernandez Gutierrez
    ========================================================================== */
 (function () {
   "use strict";
-  const P = window.PERFIL;
+
+  /* ---------------- Idioma ----------------
+     Inglés por defecto. ?lang=es o ?lang=en en la dirección lo cambian, y la elección
+     se recuerda en el navegador (botón EN | ES del menú). */
+  const IDIOMAS = ["en", "es"];
+  const leerGuardado = () => { try { return localStorage.getItem("idioma"); } catch (e) { return null; } };
+  const guardar = v => { try { localStorage.setItem("idioma", v); } catch (e) { /* modo privado: no se recuerda */ } };
+  const pedido = new URLSearchParams(location.search).get("lang");
+  if (IDIOMAS.includes(pedido)) guardar(pedido);
+  const idioma = IDIOMAS.includes(pedido) ? pedido : (IDIOMAS.includes(leerGuardado()) ? leerGuardado() : "en");
+  window.IDIOMA = idioma;
+  document.documentElement.lang = idioma;
+
+  const P = idioma === "en" && window.PERFIL_EN ? window.PERFIL_EN : window.PERFIL;
+
+  /* Textos fijos de la interfaz */
+  const TEXTOS = {
+    en: {
+      correo: "Email", leer: "Read article", codigo: "Code", citar: "Cite", copiado: "Copied!",
+      relacionadas: "Related publications", verProyecto: "View project", principal: "Main", inicio: "Home",
+      abrirMenu: "Open menu", cerrarMenu: "Close menu", secciones: "Sections", contacto: "Contact",
+      actualizado: "Last updated:", fotoDe: "Photo of", descargarCV: "Download CV", todas: "All",
+      sinResultados: "No results for that search.", de: "of", trabajo: "work", trabajos: "works",
+      perfiles: "Full, up-to-date list on", revision: "Review", adscripcion: "Affiliation", ubicacion: "Location",
+      idioma: "Language", asunto: "[Website]", servicioExterno: "an external service",
+      privServicio: "Messages are delivered through {p}. Your information is used only to reply to you.",
+      privPhp: "Your information is used only to reply to your message and is never shared with third parties.",
+      privCorreo: "Sending will open your email app with the message ready. This page does not store any data.",
+      enviar: "Send message", abrirCorreo: "Open my email to send",
+      ok: "Thank you! Your message has been sent. I will reply shortly.",
+      error: "The message could not be sent. Please write to me directly at {c}.",
+      abierto: "Your email app opened with the message ready; you just need to send it. If it did not open, write to {c}.",
+      enviando: "Sending…",
+      respaldo: "The message could not be sent from the page, so your email app opened with the message ready. If it did not open, write to {c}."
+    },
+    es: {
+      correo: "Correo", leer: "Leer artículo", codigo: "Código", citar: "Citar", copiado: "¡Copiado!",
+      relacionadas: "Publicaciones relacionadas", verProyecto: "Ver proyecto", principal: "Principal", inicio: "Inicio",
+      abrirMenu: "Abrir menú", cerrarMenu: "Cerrar menú", secciones: "Secciones", contacto: "Contacto",
+      actualizado: "Última actualización:", fotoDe: "Fotografía de", descargarCV: "Descargar CV", todas: "Todas",
+      sinResultados: "No hay resultados para esa búsqueda.", de: "de", trabajo: "trabajo", trabajos: "trabajos",
+      perfiles: "Lista completa y actualizada en", revision: "Revisión", adscripcion: "Adscripción", ubicacion: "Ubicación",
+      idioma: "Idioma", asunto: "[Página web]", servicioExterno: "un servicio externo",
+      privServicio: "Los mensajes se entregan mediante {p}. Sus datos solo se usan para responderle.",
+      privPhp: "Sus datos solo se usan para responder a su mensaje y no se comparten con terceros.",
+      privCorreo: "Al enviar se abrirá su programa de correo con el mensaje listo. Esta página no guarda ningún dato.",
+      enviar: "Enviar mensaje", abrirCorreo: "Abrir mi correo para enviar",
+      ok: "¡Gracias! Su mensaje fue enviado. Le responderé a la brevedad.",
+      error: "No se pudo enviar el mensaje. Escríbame directamente a {c}.",
+      abierto: "Se abrió su programa de correo con el mensaje listo; solo falta enviarlo. Si no se abrió, escriba a {c}.",
+      enviando: "Enviando…",
+      respaldo: "No fue posible enviarlo desde la página, así que se abrió su programa de correo con el mensaje listo. Si no se abrió, escriba a {c}."
+    }
+  };
+  const t = (clave, datos) => (TEXTOS[idioma][clave] || TEXTOS.es[clave] || clave)
+    .replace(/\{(\w)\}/g, (_, k) => (datos && datos[k]) || "");
+
+  /* Textos fijos del HTML: el HTML está en inglés y lleva el español en data-es
+     (y data-es-placeholder, data-es-aria-label, data-es-title, data-es-content, data-es-alt). */
+  function traducirEstatico() {
+    if (idioma !== "es") return;
+    document.querySelectorAll("[data-es]").forEach(el => {
+      if (el.tagName === "TITLE") document.title = el.dataset.es;
+      else el.innerHTML = el.dataset.es;
+    });
+    ["placeholder", "aria-label", "title", "content", "alt"].forEach(a =>
+      document.querySelectorAll(`[data-es-${a}]`).forEach(el => el.setAttribute(a, el.getAttribute(`data-es-${a}`))));
+  }
+
   // Los elementos con la palabra EDITAR son datos pendientes: no se publican.
   ["intereses", "enlaces", "cifras", "noticias", "lineas", "publicaciones", "proyectos", "docencia", "servicio", "formacion",
    "premios", "proyectosInvestigacion", "direccion", "revision", "divulgacion", "habilidades"]
@@ -21,18 +90,24 @@
 
   /* ---------------- Menú principal ---------------- */
   const MENU = [
-    { id: "inicio",        texto: "Inicio",         url: "index.html" },
-    { id: "sobre",         texto: "Sobre mí",       url: "sobre-mi.html" },
-    { id: "investigacion", texto: "Investigación",  url: "investigacion.html" },
-    { id: "publicaciones", texto: "Publicaciones",  url: "publicaciones.html" },
-    { id: "proyectos",     texto: "Proyectos",      url: "proyectos.html" },
-    { id: "educacion",     texto: "Educación",      url: "educacion/index.html" },
-    { id: "juegos",        texto: "Juegos",         url: "juegos/index.html" },
-    { id: "contacto",      texto: "Contacto",       url: "contacto.html" }
-  ];
+    { id: "inicio",        texto: { en: "Home",         es: "Inicio" },        url: "index.html" },
+    { id: "sobre",         texto: { en: "About",        es: "Sobre mí" },      url: "sobre-mi.html" },
+    { id: "investigacion", texto: { en: "Research",     es: "Investigación" }, url: "investigacion.html" },
+    { id: "publicaciones", texto: { en: "Publications", es: "Publicaciones" }, url: "publicaciones.html" },
+    { id: "proyectos",     texto: { en: "Projects",     es: "Proyectos" },     url: "proyectos.html" },
+    { id: "educacion",     texto: { en: "Education",    es: "Educación" },     url: "educacion/index.html" },
+    { id: "juegos",        texto: { en: "Games",        es: "Juegos" },        url: "juegos/index.html" },
+    { id: "contacto",      texto: { en: "Contact",      es: "Contacto" },      url: "contacto.html" }
+  ].map(m => Object.assign({}, m, { texto: m.texto[idioma] }));
 
   // El orden de esta lista es el de las pestañas y el de las publicaciones de un mismo año
-  const TIPOS = {
+  const TIPOS = idioma === "en" ? {
+    revista:     { texto: "Journal article",   corto: "Journals" },
+    congreso:    { texto: "Conference",        corto: "Conferences" },
+    otra:        { texto: "Other publication", corto: "Other" },
+    preparacion: { texto: "In preparation",    corto: "In preparation" },
+    tesis:       { texto: "Thesis",            corto: "Theses" }
+  } : {
     revista:     { texto: "Artículo de revista", corto: "Revistas" },
     congreso:    { texto: "Congreso",            corto: "Congresos" },
     otra:        { texto: "Otra publicación",    corto: "Otras" },
@@ -72,12 +147,12 @@
   const poner = (sel, html) => { const el = $(sel); if (el) el.innerHTML = html; };
 
   function redes(conCorreo) {
-    return (conCorreo ? `<a href="mailto:${P.correo}" title="Correo" aria-label="Correo">${ICONOS.correo}</a>` : "") +
+    return (conCorreo ? `<a href="mailto:${P.correo}" title="${t("correo")}" aria-label="${t("correo")}">${ICONOS.correo}</a>` : "") +
       enlacesValidos().map(e => `<a href="${e.url}" target="_blank" rel="noopener" title="${e.etiqueta}" aria-label="${e.etiqueta}">${ICONOS[e.tipo] || ""}</a>`).join("");
   }
 
   function copiar(texto, boton) {
-    const listo = () => { const t = boton.textContent; boton.textContent = "¡Copiado!"; setTimeout(() => { boton.textContent = t; }, 1400); };
+    const listo = () => { const antes = boton.textContent; boton.textContent = t("copiado"); setTimeout(() => { boton.textContent = antes; }, 1400); };
     const alterno = () => {
       const ta = document.createElement("textarea");
       ta.value = texto; ta.style.position = "fixed"; ta.style.opacity = "0";
@@ -100,10 +175,10 @@
         <p class="v"><em>${p.revista}</em>${p.detalle ? ", " + p.detalle : ""}</p>
       </div>
       <div class="acc">
-        ${p.doi ? `<a href="https://doi.org/${p.doi}" target="_blank" rel="noopener">Leer artículo</a>` : ""}
+        ${p.doi ? `<a href="https://doi.org/${p.doi}" target="_blank" rel="noopener">${t("leer")}</a>` : ""}
         ${p.pdf ? `<a href="${p.pdf}" target="_blank" rel="noopener">PDF</a>` : ""}
-        ${p.codigo ? `<a href="${p.codigo}" target="_blank" rel="noopener">Código</a>` : ""}
-        ${p.bibtex ? `<button type="button" data-cita="${p.id}" aria-expanded="false">Citar</button>` : ""}
+        ${p.codigo ? `<a href="${p.codigo}" target="_blank" rel="noopener">${t("codigo")}</a>` : ""}
+        ${p.bibtex ? `<button type="button" data-cita="${p.id}" aria-expanded="false">${t("citar")}</button>` : ""}
       </div>
       ${p.bibtex ? `<pre id="bib-${p.id}">${p.bibtex}</pre>` : ""}
     </article>`;
@@ -125,7 +200,7 @@
     if (conRelacionadas) {
       const pubs = ordenarPubs(P.publicaciones.filter(p => p.linea === l.id));
       if (pubs.length) {
-        rel = `<div class="relacionadas"><h4>Publicaciones relacionadas</h4><ul>${pubs.map(p =>
+        rel = `<div class="relacionadas"><h4>${t("relacionadas")}</h4><ul>${pubs.map(p =>
           `<li><a href="publicaciones.html#pub-${p.id}">${p.titulo}</a> <span class="estado" style="color:var(--suave)">· ${TIPOS[p.tipo].corto}, ${p.anio}</span></li>`).join("")}</ul></div>`;
       }
     }
@@ -137,7 +212,7 @@
         <h3>${l.titulo}</h3>
         <p>${l.resumen}</p>
         <div class="tags">${l.etiquetas.map(t => `<span>${t}</span>`).join("")}</div>
-        ${conRelacionadas && l.enlace ? `<p class="nota" style="margin:14px 0 0"><a href="${l.enlace}">${l.textoEnlace || "Ver proyecto"} →</a></p>` : ""}
+        ${conRelacionadas && l.enlace ? `<p class="nota" style="margin:14px 0 0"><a href="${l.enlace}">${l.textoEnlace || t("verProyecto")} →</a></p>` : ""}
         ${rel}
       </div>
     </article>`;
@@ -149,22 +224,35 @@
     if (!lugar) return;
     const nav = document.createElement("nav");
     nav.className = "barra";
-    nav.setAttribute("aria-label", "Principal");
+    nav.setAttribute("aria-label", t("principal"));
     nav.innerHTML = `
       <div class="ancho">
-        <a class="logo" href="${raiz}index.html" aria-label="Inicio"><span class="sello">${P.iniciales}</span><span class="logo-nombre">${P.nombreCorto}</span></a>
-        <button class="hamburguesa" type="button" aria-expanded="false" aria-controls="menu-principal" aria-label="Abrir menú"><span></span></button>
+        <a class="logo" href="${raiz}index.html" aria-label="${t("inicio")}"><span class="sello">${P.iniciales}</span><span class="logo-nombre">${P.nombreCorto}</span></a>
         <ul class="menu" id="menu-principal">
           ${MENU.map(m => `<li><a href="${raiz}${m.url}"${m.id === seccionMenu ? ' aria-current="page"' : ""}>${m.texto}</a></li>`).join("")}
         </ul>
+        <div class="idiomas" role="group" aria-label="${t("idioma")}">
+          <button type="button" data-idioma="en" lang="en" aria-pressed="${idioma === "en"}" title="English">EN</button>
+          <button type="button" data-idioma="es" lang="es" aria-pressed="${idioma === "es"}" title="Español">ES</button>
+        </div>
+        <button class="hamburguesa" type="button" aria-expanded="false" aria-controls="menu-principal" aria-label="${t("abrirMenu")}"><span></span></button>
       </div>`;
     lugar.replaceWith(nav);
+
+    // Cambiar de idioma: se recuerda y se vuelve a cargar la página en el idioma elegido
+    $$(".idiomas button", nav).forEach(b => b.addEventListener("click", () => {
+      if (b.dataset.idioma === idioma) return;
+      guardar(b.dataset.idioma);
+      const u = new URL(location.href);
+      u.searchParams.delete("lang");
+      if (u.href === location.href) location.reload(); else location.href = u.href;
+    }));
 
     const boton = $(".hamburguesa", nav);
     const fijar = abierta => {
       nav.classList.toggle("abierta", abierta);
       boton.setAttribute("aria-expanded", String(abierta));
-      boton.setAttribute("aria-label", abierta ? "Cerrar menú" : "Abrir menú");
+      boton.setAttribute("aria-label", abierta ? t("cerrarMenu") : t("abrirMenu"));
     };
     boton.addEventListener("click", () => fijar(!nav.classList.contains("abierta")));
     document.addEventListener("keydown", e => { if (e.key === "Escape" && nav.classList.contains("abierta")) { fijar(false); boton.focus(); } });
@@ -189,10 +277,10 @@
             <p>${P.cargo}<br>${P.institucion}<br>${P.unidad}</p>
             <div class="redes">${redes(true)}</div>
           </div>
-          <div><h4>Secciones</h4><ul>${MENU.map(m => `<li><a href="${raiz}${m.url}">${m.texto}</a></li>`).join("")}</ul></div>
-          <div><h4>Contacto</h4><p><a href="mailto:${P.correo}">${P.correo}</a></p><p>${P.ciudad}</p></div>
+          <div><h4>${t("secciones")}</h4><ul>${MENU.map(m => `<li><a href="${raiz}${m.url}">${m.texto}</a></li>`).join("")}</ul></div>
+          <div><h4>${t("contacto")}</h4><p><a href="mailto:${P.correo}">${P.correo}</a></p><p>${P.ciudad}</p></div>
         </div>
-        <div class="pie-final"><span>© ${new Date().getFullYear()} ${P.nombre}</span><span>Última actualización: ${P.actualizado}</span></div>
+        <div class="pie-final"><span>© ${new Date().getFullYear()} ${P.nombre}</span><span>${t("actualizado")} ${P.actualizado}</span></div>
       </div>`;
     lugar.replaceWith(pie);
   }
@@ -206,7 +294,7 @@
       poner("#redes", redes(true));
       poner("#cifras", P.cifras.map(c => `<div class="cifra"><b>${c.valor}</b><span>${c.texto}</span></div>`).join(""));
       poner("#resumen", `<p>${P.bio[0]}</p>`);
-      poner("#foto", P.foto ? `<img src="${P.foto}" alt="Fotografía de ${P.nombre}">` : P.iniciales);
+      poner("#foto", P.foto ? `<img src="${P.foto}" alt="${t("fotoDe")} ${P.nombre}">` : P.iniciales);
       poner("#intereses", P.intereses.map(i => `<span>${i}</span>`).join(""));
       poner("#lineas-mini", P.lineas.map(l =>
         `<a href="investigacion.html#${l.id}"><div class="ilus">${ILUS[l.id] || ""}</div><span class="estado">${l.estado}</span><b>${l.titulo}</b></a>`).join(""));
@@ -220,7 +308,7 @@
     },
 
     sobre() {
-      poner("#foto", P.foto ? `<img src="${P.foto}" alt="Fotografía de ${P.nombre}">` : P.iniciales);
+      poner("#foto", P.foto ? `<img src="${P.foto}" alt="${t("fotoDe")} ${P.nombre}">` : P.iniciales);
       poner("#bio", P.bio.map(p => `<p>${p}</p>`).join(""));
       poner("#formacion", P.formacion.map(f =>
         `<li><time>${f.periodo}</time><b>${f.grado}</b><span>${f.lugar}${f.detalle ? `<br><small>${f.detalle}</small>` : ""}</span></li>`).join(""));
@@ -234,7 +322,7 @@
       poner("#servicio", P.revision.map(s => `<li>${s.titulo}<small>${s.texto}</small></li>`).join(""));
       poner("#redes", redes(true));
       const cv = P.enlaces.find(e => e.tipo === "cv" && e.url);
-      poner("#boton-cv", cv ? `<a class="btn prim" href="${cv.url}" target="_blank" rel="noopener">Descargar CV</a>` : "");
+      poner("#boton-cv", cv ? `<a class="btn prim" href="${cv.url}" target="_blank" rel="noopener">${t("descargarCV")}</a>` : "");
     },
 
     investigacion() {
@@ -242,11 +330,12 @@
     },
 
     publicaciones() {
+      const TODAS = TEXTOS[idioma].todas;
       const tipos = ["todas"].concat(ORDEN_TIPOS.filter(t => P.publicaciones.some(p => p.tipo === t)));
       let tipoSel = "todas", texto = "";
       const pintarPestanas = () => {
         poner("#pestanas", tipos.map(t =>
-          `<button type="button" class="${t === tipoSel ? "activo" : ""}" data-t="${t}" aria-pressed="${t === tipoSel}">${t === "todas" ? "Todas" : TIPOS[t].corto}</button>`).join(""));
+          `<button type="button" class="${t === tipoSel ? "activo" : ""}" data-t="${t}" aria-pressed="${t === tipoSel}">${t === "todas" ? TODAS : TIPOS[t].corto}</button>`).join(""));
         $$("#pestanas button").forEach(b => b.addEventListener("click", () => { tipoSel = b.dataset.t; pintarPestanas(); pintarLista(); }));
       };
       const pintarLista = () => {
@@ -255,14 +344,14 @@
           .filter(p => tipoSel === "todas" || p.tipo === tipoSel)
           .filter(p => !q || [p.titulo, p.revista, p.autores.join(" "), (lineaPorId(p.linea) || {}).titulo || ""].join(" ").toLowerCase().includes(q));
         const caja = $("#pubs");
-        caja.innerHTML = lista.length ? lista.map(tarjetaPub).join("") : `<p class="vacio">No hay resultados para esa búsqueda.</p>`;
-        poner("#conteo", `${lista.length} de ${P.publicaciones.length} ${P.publicaciones.length === 1 ? "trabajo" : "trabajos"}`);
+        caja.innerHTML = lista.length ? lista.map(tarjetaPub).join("") : `<p class="vacio">${t("sinResultados")}</p>`;
+        poner("#conteo", `${lista.length} ${t("de")} ${P.publicaciones.length} ${P.publicaciones.length === 1 ? t("trabajo") : t("trabajos")}`);
         activarCitas(caja);
       };
       $("#buscar").addEventListener("input", e => { texto = e.target.value; pintarLista(); });
       pintarPestanas(); pintarLista();
       const perfiles = enlacesValidos().filter(e => ["scholar", "orcid", "rg"].includes(e.tipo));
-      poner("#perfiles", perfiles.length ? `Lista completa y actualizada en ${perfiles.map(e => `<a href="${e.url}" target="_blank" rel="noopener">${e.etiqueta}</a>`).join(" · ")}.` : "");
+      poner("#perfiles", perfiles.length ? `${t("perfiles")} ${perfiles.map(e => `<a href="${e.url}" target="_blank" rel="noopener">${e.etiqueta}</a>`).join(" · ")}.` : "");
       // Si se llega con #pub-ID desde otra página, resalta esa publicación
       if (location.hash) { const el = $(location.hash); if (el) { el.style.borderColor = "var(--turquesa)"; el.scrollIntoView(); } }
     },
@@ -271,8 +360,8 @@
       poner("#lista-investigacion", cronologia(P.proyectosInvestigacion));
       poner("#lista-proyectos", P.proyectos.map(p => `
         <div class="proy"><small>${p.etiqueta}</small><b>${p.titulo}</b><p>${p.texto}</p>
-          ${p.enlace ? `<a href="${p.enlace}"${/^https?:/.test(p.enlace) ? ' target="_blank" rel="noopener"' : ""}>Ver proyecto →</a>` : ""}</div>`).join(""));
-      poner("#lista-revision", P.revision.map(s => `<li><time>Revisión</time><b>${s.titulo}</b><span>${s.texto}</span></li>`).join("") + cronologia(P.servicio));
+          ${p.enlace ? `<a href="${p.enlace}"${/^https?:/.test(p.enlace) ? ' target="_blank" rel="noopener"' : ""}>${t("verProyecto")} →</a>` : ""}</div>`).join(""));
+      poner("#lista-revision", P.revision.map(s => `<li><time>${t("revision")}</time><b>${s.titulo}</b><span>${s.texto}</span></li>`).join("") + cronologia(P.servicio));
       poner("#lista-divulgacion", cronologia(P.divulgacion));
       // Oculta las secciones que quedaron sin contenido
       $$("section[data-seccion]").forEach(s => { const lista = $("[id^=lista-]", s); if (lista && !lista.innerHTML.trim()) s.hidden = true; });
@@ -280,9 +369,9 @@
 
     contacto() {
       poner("#datos-contacto", `
-        <div class="dato"><div class="icono">${ICONOS.correo}</div><div><b>Correo</b><a href="mailto:${P.correo}">${P.correo}</a></div></div>
-        <div class="dato"><div class="icono">${ICONOS.grupo}</div><div><b>Adscripción</b><span>${P.grupo}<br>${P.unidad}<br>${P.institucion}</span></div></div>
-        <div class="dato"><div class="icono">${ICONOS.lugar}</div><div><b>Ubicación</b><span>${P.ciudad}</span></div></div>
+        <div class="dato"><div class="icono">${ICONOS.correo}</div><div><b>${t("correo")}</b><a href="mailto:${P.correo}">${P.correo}</a></div></div>
+        <div class="dato"><div class="icono">${ICONOS.grupo}</div><div><b>${t("adscripcion")}</b><span>${P.grupo}<br>${P.unidad}<br>${P.institucion}</span></div></div>
+        <div class="dato"><div class="icono">${ICONOS.lugar}</div><div><b>${t("ubicacion")}</b><span>${P.ciudad}</span></div></div>
         <div class="redes oscuras">${redes(false)}</div>`);
       poner("#asunto", P.asuntosContacto.map(a => `<option>${a}</option>`).join(""));
       activarFormulario();
@@ -301,7 +390,7 @@
     const boton = $("button[type=submit]", form);
     const servicio = (P.formularioServicio || "").trim();
     const mostrar = (clase, texto) => { aviso.className = "aviso-form " + clase; aviso.textContent = texto; aviso.focus(); };
-    const asuntoDe = datos => `[Página web] ${datos.get("asunto")} — ${datos.get("nombre")}`;
+    const asuntoDe = datos => `${t("asunto")} ${datos.get("asunto")} — ${datos.get("nombre")}`;
     const abrirCorreo = datos => {
       const cuerpo = `${datos.get("mensaje")}\n\n${datos.get("nombre")}\n${datos.get("email")}`;
       window.location.href = `mailto:${P.correo}?subject=${encodeURIComponent(asuntoDe(datos))}&body=${encodeURIComponent(cuerpo)}`;
@@ -309,18 +398,18 @@
 
     if (servicio) {
       poner("#privacidad", /^https?:\/\//i.test(servicio)
-        ? `Los mensajes se entregan mediante ${P.formularioProveedor || "un servicio externo"}. Sus datos solo se usan para responderle.`
-        : "Sus datos solo se usan para responder a su mensaje y no se comparten con terceros.");
-      boton.textContent = "Enviar mensaje";
+        ? t("privServicio", { p: P.formularioProveedor || t("servicioExterno") })
+        : t("privPhp"));
+      boton.textContent = t("enviar");
     } else {
-      poner("#privacidad", "Al enviar se abrirá su programa de correo con el mensaje listo. Esta página no guarda ningún dato.");
-      boton.textContent = "Abrir mi correo para enviar";
+      poner("#privacidad", t("privCorreo"));
+      boton.textContent = t("abrirCorreo");
     }
 
     // Resultado cuando enviar.php redirige aquí (envío sin JavaScript)
     const estado = new URLSearchParams(location.search).get("estado");
-    if (estado === "ok") mostrar("ok", "¡Gracias! Su mensaje fue enviado. Le responderé a la brevedad.");
-    if (estado === "error") mostrar("error", "No se pudo enviar el mensaje. Escríbame directamente a " + P.correo + ".");
+    if (estado === "ok") mostrar("ok", t("ok"));
+    if (estado === "error") mostrar("error", t("error", { c: P.correo }));
 
     form.addEventListener("submit", async e => {
       e.preventDefault();
@@ -330,13 +419,13 @@
       datos.set("_subject", asuntoDe(datos));                    // asunto del correo en Formspree
 
       if (!servicio) {
-        mostrar("info", "Se abrió su programa de correo con el mensaje listo; solo falta enviarlo. Si no se abrió, escriba a " + P.correo + ".");
+        mostrar("info", t("abierto", { c: P.correo }));
         abrirCorreo(datos);
         return;
       }
 
       boton.disabled = true;
-      mostrar("info", "Enviando…");
+      mostrar("info", t("enviando"));
       let resp = null, r = null;
       try {
         resp = await fetch(servicio, { method: "POST", body: datos, headers: { Accept: "application/json" } });
@@ -346,18 +435,19 @@
 
       if (resp && resp.ok && r && r.ok !== false) {
         form.reset();
-        mostrar("ok", r.mensaje || "¡Gracias! Su mensaje fue enviado. Le responderé a la brevedad.");
+        mostrar("ok", r.mensaje || t("ok"));
         return;
       }
       const error = r && (r.mensaje || (Array.isArray(r.errors) && r.errors.map(x => x.message).join(" ")) || r.error);
       if (error && !r.respaldo) { mostrar("error", error); return; }
 
-      mostrar("info", "No fue posible enviarlo desde la página, así que se abrió su programa de correo con el mensaje listo. Si no se abrió, escriba a " + P.correo + ".");
+      mostrar("info", t("respaldo", { c: P.correo }));
       abrirCorreo(datos);
     });
   }
 
   /* ---------------- Arranque ---------------- */
+  traducirEstatico();
   pintarBarra();
   pintarPie();
   if (PAGINAS[pagina]) PAGINAS[pagina]();

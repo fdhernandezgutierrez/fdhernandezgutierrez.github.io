@@ -12,6 +12,8 @@
   const MAX_BYTES = 25 * 1024 * 1024;
 
   const hayCache = () => typeof caches !== "undefined" && G.isSecureContext;
+  // Mensajes en el idioma de la página (sitio.js define window.IDIOMA; inglés por defecto)
+  const m = (es, en) => (G.IDIOMA === "es" ? es : en);
 
   async function sha256(bytes) {
     const h = await crypto.subtle.digest("SHA-256", bytes);
@@ -31,7 +33,7 @@
           G.ort.env.wasm.numThreads = 1;
           ok(G.ort);
         };
-        s.onerror = () => { promesaORT = null; mal(new Error("No se pudo cargar ONNX Runtime Web. Revise su conexión a internet.")); };
+        s.onerror = () => { promesaORT = null; mal(new Error(m("No se pudo cargar ONNX Runtime Web. Revise su conexión a internet.", "ONNX Runtime Web could not be loaded. Check your internet connection."))); };
         document.head.append(s);
       });
     }
@@ -40,7 +42,7 @@
 
   async function leerManifiesto(base) {
     const r = await fetch(base + "modelo.json", { cache: "no-cache" });
-    if (!r.ok) throw new Error("No se encontró el modelo en el servidor.");
+    if (!r.ok) throw new Error(m("No se encontró el modelo en el servidor.", "The model was not found on the server."));
     return r.json();
   }
 
@@ -99,13 +101,13 @@
       }
       if (!listo) {
         const r = await fetch(url, { cache: "no-store" });
-        if (!r.ok) throw new Error("No se pudo descargar el modelo (error " + r.status + ").");
+        if (!r.ok) throw new Error(m("No se pudo descargar el modelo (error ", "The model could not be downloaded (error ") + r.status + ").");
         const lector = r.body.getReader();
         let pos = 0;
         for (;;) {
           const { done, value } = await lector.read();
           if (done) break;
-          if (pos + value.length > parte.bytes) throw new Error("La descarga del modelo llegó dañada. Inténtelo de nuevo.");
+          if (pos + value.length > parte.bytes) throw new Error(m("La descarga del modelo llegó dañada. Inténtelo de nuevo.", "The model download arrived damaged. Please try again."));
           destino.set(value, pos);
           pos += value.length;
           hecho += value.length;
@@ -113,7 +115,7 @@
           alProgreso && alProgreso(hecho, man.bytes, true);
         }
         if (pos !== parte.bytes || (await sha256(destino)) !== parte.sha256) {
-          throw new Error("La descarga del modelo llegó incompleta o dañada. Inténtelo de nuevo.");
+          throw new Error(m("La descarga del modelo llegó incompleta o dañada. Inténtelo de nuevo.", "The model download arrived incomplete or damaged. Please try again."));
         }
         if (cache) await cache.put(url, new Response(destino.slice())).catch(() => {});
       }
@@ -151,7 +153,7 @@
 
   /** Decodifica la imagen como Pillow: sin conversión de color y con la orientación EXIF aplicada. */
   async function decodificar(blob) {
-    if (blob.size > MAX_BYTES) throw new Error("El archivo pasa de 25 MB.");
+    if (blob.size > MAX_BYTES) throw new Error(m("El archivo pasa de 25 MB.", "The file is larger than 25 MB."));
     let bmp;
     try {
       bmp = await createImageBitmap(blob, { colorSpaceConversion: "none", premultiplyAlpha: "none", imageOrientation: "from-image" });
@@ -162,14 +164,14 @@
       bmp = await new Promise((ok, mal) => {
         const img = new Image();
         img.onload = () => ok(img);
-        img.onerror = () => mal(new Error("No se pudo leer el archivo como imagen (use JPG, PNG, WebP o BMP)."));
+        img.onerror = () => mal(new Error(m("No se pudo leer el archivo como imagen (use JPG, PNG, WebP o BMP).", "The file could not be read as an image (use JPG, PNG, WebP, or BMP).")));
         img.src = URL.createObjectURL(blob);
       });
     }
     const w = bmp.width || bmp.naturalWidth, h = bmp.height || bmp.naturalHeight;
-    if (!w || !h) throw new Error("No se pudo leer el archivo como imagen (use JPG, PNG, WebP o BMP).");
-    if (w * h > MAX_PIXELES) throw new Error(`La imagen es demasiado grande (${w}×${h} px; máximo 25 megapíxeles).`);
-    if (w < 16 || h < 16) throw new Error("La imagen es demasiado pequeña.");
+    if (!w || !h) throw new Error(m("No se pudo leer el archivo como imagen (use JPG, PNG, WebP o BMP).", "The file could not be read as an image (use JPG, PNG, WebP, or BMP)."));
+    if (w * h > MAX_PIXELES) throw new Error(m(`La imagen es demasiado grande (${w}×${h} px; máximo 25 megapíxeles).`, `The image is too large (${w}×${h} px; maximum 25 megapixels).`));
+    if (w < 16 || h < 16) throw new Error(m("La imagen es demasiado pequeña.", "The image is too small."));
     const lienzo = document.createElement("canvas");
     lienzo.width = w; lienzo.height = h;
     const ctx = lienzo.getContext("2d", { willReadFrequently: true });

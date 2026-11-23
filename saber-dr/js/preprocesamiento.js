@@ -299,22 +299,23 @@
   }
 
   // ------------------------------------------------------------------ calidad de imagen
-  /** Mismos avisos que la aplicación web y la app Android. */
+  /**
+   * Mismas revisiones que la aplicación web y la app Android. Devuelve códigos
+   * ({ codigo: "pequena" | "oscura" | "color" | "forma", ancho, alto }); demo.js los pone en palabras.
+   */
   function avisosCalidad(anchoOriginal, altoOriginal, recortada) {
     const avisos = [];
-    if (Math.min(anchoOriginal, altoOriginal) < 224) {
-      avisos.push(`La imagen es pequeña (${anchoOriginal}×${altoOriginal} px); el modelo se entrenó con retinografías de mayor resolución.`);
-    }
+    if (Math.min(anchoOriginal, altoOriginal) < 224) avisos.push({ codigo: "pequena", ancho: anchoOriginal, alto: altoOriginal });
     const chica = redimensionar(recortada, 256, 256, true);
     let dentro = 0, r = 0, g = 0, b = 0;
     for (let i = 0; i < 256 * 256; i++) {
       const ri = chica.datos[3 * i], gi = chica.datos[3 * i + 1], bi = chica.datos[3 * i + 2];
       if (Math.max(ri, gi, bi) > 20) { dentro++; r += ri; g += gi; b += bi; }
     }
-    if (dentro < 0.25 * 256 * 256) avisos.push("La imagen es muy oscura; revise la exposición de la retinografía.");
-    else if (!(r > g && r > b)) avisos.push("Coloración atípica para una retinografía en color (poco rojiza): el resultado es menos fiable y, si la imagen no es un fondo de ojo, no es válido.");
+    if (dentro < 0.25 * 256 * 256) avisos.push({ codigo: "oscura" });
+    else if (!(r > g && r > b)) avisos.push({ codigo: "color" });
     const razon = Math.max(recortada.ancho, recortada.alto) / Math.max(1, Math.min(recortada.ancho, recortada.alto));
-    if (razon > 1.6) avisos.push("Tras recortar los bordes negros la imagen no es aproximadamente circular (¿es realmente un fondo de ojo?).");
+    if (razon > 1.6) avisos.push({ codigo: "forma" });
     return avisos;
   }
 

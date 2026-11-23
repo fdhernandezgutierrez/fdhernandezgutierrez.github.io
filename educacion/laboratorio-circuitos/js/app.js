@@ -31,7 +31,7 @@
   const raiz = document.getElementById("lab");
 
   function inicio() {
-    document.title = "Laboratorio de Circuitos · Fernando D. Hernández";
+    document.title = (window.IDIOMA === "es" ? "Laboratorio de Circuitos" : "Circuits Lab") + " · Fernando D. Hernández";
     raiz.replaceChildren(
       h("div", { class: "lab-modulos" }, LISTA.map((m, i) => {
         const listo = !!MODULOS[m.id];

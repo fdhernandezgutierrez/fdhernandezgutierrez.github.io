@@ -349,3 +349,13 @@ footer.final{background:var(--tinta);color:#9aa6bf;margin-top:96px;padding:56px 
 .aviso-investigacion a{color:var(--turquesa-osc);font-weight:600}
 @media (max-width:1060px){ .pasos{grid-template-columns:repeat(2,1fr)} }
 @media (max-width:560px){ .pasos{grid-template-columns:1fr} .figura img{border-radius:10px} }
+
+/* ---------- Selector de idioma (EN | ES) ---------- */
+nav.barra .menu{margin-left:auto}
+.idiomas{display:flex;flex:none;gap:2px;padding:2px;border:1px solid var(--borde-osc);border-radius:9px}
+.idiomas button{background:none;border:0;color:#b9c3d8;font:600 12.5px var(--sans);letter-spacing:.05em;padding:5px 8px;border-radius:7px;cursor:pointer}
+.idiomas button:hover{color:#fff;background:rgba(255,255,255,.06)}
+.idiomas button[aria-pressed="true"]{background:var(--turquesa);color:#04211e;cursor:default}
+@media (max-width:1100px){ .idiomas{margin-left:auto} nav.barra .ancho{gap:12px} }
+.menu a{white-space:nowrap}
+@media (min-width:1101px) and (max-width:1240px){ .menu a{padding:8px 9px} nav.barra .ancho{gap:14px} }

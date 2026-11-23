@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SABER-DR · Fernando D. Hernández</title>
-<meta name="description" content="SABER-DR: clasificación automática de la retinopatía diabética en cinco grados con aprendizaje ordinal y expertos en las fronteras entre grados. Pruébelo en el navegador: la imagen no sale de su equipo.">
+<title data-es="SABER-DR · Fernando D. Hernández">SABER-DR · Fernando D. Hernández</title>
+<meta name="description" content="SABER-DR: automatic five-grade diabetic retinopathy classification with ordinal learning and experts at the boundaries between grades. Try it in your browser: the image never leaves your device." data-es-content="SABER-DR: clasificación automática de la retinopatía diabética en cinco grados con aprendizaje ordinal y expertos en las fronteras entre grados. Pruébelo en el navegador: la imagen no sale de su equipo.">
 <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,80 +13,80 @@
 <link rel="stylesheet" href="css/demo.css">
 </head>
 <body data-pagina="saber-dr" data-menu="proyectos" data-raiz="../">
-<a class="saltar" href="#contenido">Saltar al contenido</a>
+<a class="saltar" href="#contenido" data-es="Saltar al contenido">Skip to content</a>
 <div id="barra"></div>
 
 <header class="cabecera-pagina">
   <div class="ancho">
-    <p class="sobretitulo">Proyecto de investigación</p>
+    <p class="sobretitulo" data-es="Proyecto de investigación">Research project</p>
     <h1>SABER-DR</h1>
-    <p>Clasificación automática de la retinopatía diabética en los cinco grados de la escala internacional (ICDR) a partir de una retinografía.</p>
+    <p data-es="Clasificación automática de la retinopatía diabética en los cinco grados de la escala internacional (ICDR) a partir de una retinografía.">Automatic classification of diabetic retinopathy into the five grades of the international scale (ICDR) from a fundus photograph.</p>
   </div>
 </header>
 
 <main id="contenido">
   <section class="seccion primera" id="demo">
     <div class="ancho">
-      <div class="cabeza"><div><span class="num">Demostración</span><h2>Pruébelo en su navegador</h2>
-        <p>La retinografía se analiza en su propio equipo: no se envía a ningún servidor.</p></div></div>
+      <div class="cabeza"><div><span class="num" data-es="Demostración">Demo</span><h2 data-es="Pruébelo en su navegador">Try it in your browser</h2>
+        <p data-es="La retinografía se analiza en su propio equipo: no se envía a ningún servidor.">The fundus image is analyzed on your own device: it is never sent to any server.</p></div></div>
 
       <div class="demo">
         <div class="demo-panel">
-          <div class="demo-titulo"><h3>Retinografía</h3></div>
+          <div class="demo-titulo"><h3 data-es="Retinografía">Fundus image</h3></div>
           <div class="demo-cuerpo">
             <div class="zona" id="zona">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
-              <p>Arrastre una retinografía aquí</p>
-              <label class="btn prim" for="archivo">Seleccionar imagen</label>
+              <p data-es="Arrastre una retinografía aquí">Drag a fundus image here</p>
+              <label class="btn prim" for="archivo" data-es="Seleccionar imagen">Select image</label>
               <input type="file" id="archivo" accept="image/png,image/jpeg,image/webp,image/bmp" hidden>
-              <small>JPG · PNG · WebP · BMP · máx. 25 MB</small>
+              <small data-es="JPG · PNG · WebP · BMP · máx. 25 MB">JPG · PNG · WebP · BMP · max. 25 MB</small>
             </div>
             <div class="vista" id="vista" hidden>
-              <img id="vista-img" alt="Retinografía seleccionada">
+              <img id="vista-img" alt="Selected fundus image" data-es-alt="Retinografía seleccionada">
               <div class="vista-pie"><div><b id="vista-nombre"></b><small id="vista-datos"></small></div>
-                <button type="button" class="btn claro chico" id="cambiar">Cambiar</button></div>
+                <button type="button" class="btn claro chico" id="cambiar" data-es="Cambiar">Change</button></div>
             </div>
             <div class="ejemplos">
-              <p>Ejemplos · APTOS 2019</p>
+              <p data-es="Ejemplos · APTOS 2019">Examples · APTOS 2019</p>
               <div class="ejemplos-lista" id="ejemplos"></div>
             </div>
           </div>
         </div>
 
         <div class="demo-panel">
-          <div class="demo-titulo"><h3>Resultado</h3><small id="tiempos"></small></div>
+          <div class="demo-titulo"><h3 data-es="Resultado">Result</h3><small id="tiempos"></small></div>
           <div class="demo-cuerpo" id="resultado" aria-live="polite"></div>
         </div>
       </div>
 
       <div class="demo-panel mapas" id="mapas" hidden>
-        <div class="demo-titulo"><h3>Mapas de atención</h3><small>Expertos de frontera entre grados contiguos</small></div>
+        <div class="demo-titulo"><h3 data-es="Mapas de atención">Attention maps</h3><small data-es="Expertos de frontera entre grados contiguos">Boundary experts between adjacent grades</small></div>
         <div class="demo-cuerpo">
           <div class="mapas-lista" id="mapas-lista"></div>
-          <div class="mapas-leyenda"><span>Atención</span><small>baja</small><i aria-hidden="true"></i><small>alta</small></div>
+          <div class="mapas-leyenda"><span data-es="Atención">Attention</span><small data-es="baja">low</small><i aria-hidden="true"></i><small data-es="alta">high</small></div>
         </div>
       </div>
 
-      <p class="nota demo-nota"><span id="nota-modelo">La demostración usa uno de los cinco modelos del ensamble. La primera vez descarga el modelo (268 MB) y lo guarda en este navegador para las siguientes visitas.</span>
-        <button type="button" class="enlace" id="borrar" hidden>Borrar el modelo guardado</button></p>
+      <p class="nota demo-nota"><span id="nota-modelo" data-es="La demostración usa uno de los cinco modelos del ensamble. La primera vez descarga el modelo (268 MB) y lo guarda en este navegador para las siguientes visitas.">The demo uses one of the five models in the ensemble. The first time, it downloads the model (268 MB) and keeps it in this browser for later visits.</span>
+        <button type="button" class="enlace" id="borrar" hidden data-es="Borrar el modelo guardado">Delete the saved model</button></p>
     </div>
   </section>
 
   <section class="seccion">
     <div class="ancho">
-      <div class="cabeza"><div><span class="num">Método</span><h2>Cómo funciona</h2></div></div>
+      <div class="cabeza"><div><span class="num" data-es="Método">Method</span><h2 data-es="Cómo funciona">How it works</h2></div></div>
       <ol class="pasos">
-        <li><b>Preprocesamiento</b><span>Recorte de los bordes negros, mejora del contraste con CLAHE en el espacio de color LAB y redimensionado a 224 × 224 píxeles.</span></li>
-        <li><b>Red troncal</b><span>Una EfficientNet-B0 extrae las características de la retina; una cabeza global y una cabeza ordinal estiman el grado respetando el orden de la escala.</span></li>
-        <li><b>Expertos de frontera</b><span>Cuatro expertos (E01, E12, E23 y E34) se especializan cada uno en distinguir dos grados contiguos; una compuerta decide cuánto interviene cada uno.</span></li>
-        <li><b>Resultado</b><span>Grado estimado, probabilidad de cada grado, si la retinopatía es referible (moderada o mayor), calidad de la imagen y mapas de atención de los expertos.</span></li>
+        <li><b data-es="Preprocesamiento">Preprocessing</b><span data-es="Recorte de los bordes negros, mejora del contraste con CLAHE en el espacio de color LAB y redimensionado a 224 × 224 píxeles.">Black borders are cropped, contrast is enhanced with CLAHE in the LAB color space, and the image is resized to 224 × 224 pixels.</span></li>
+        <li><b data-es="Red troncal">Backbone</b><span data-es="Una EfficientNet-B0 extrae las características de la retina; una cabeza global y una cabeza ordinal estiman el grado respetando el orden de la escala.">An EfficientNet-B0 extracts retinal features; a global head and an ordinal head estimate the grade while respecting the order of the scale.</span></li>
+        <li><b data-es="Expertos de frontera">Boundary experts</b><span data-es="Cuatro expertos (E01, E12, E23 y E34) se especializan cada uno en distinguir dos grados contiguos; una compuerta decide cuánto interviene cada uno.">Four experts (E01, E12, E23, and E34) each specialize in telling two adjacent grades apart; a gate decides how much each one contributes.</span></li>
+        <li><b data-es="Resultado">Output</b><span data-es="Grado estimado, probabilidad de cada grado, si la retinopatía es referible (moderada o mayor), calidad de la imagen y mapas de atención de los expertos.">Estimated grade, probability of each grade, whether the retinopathy is referable (moderate or worse), image quality, and the experts’ attention maps.</span></li>
       </ol>
     </div>
   </section>
 
   <section class="seccion" id="versiones">
     <div class="ancho">
-      <div class="cabeza"><div><span class="num">Versiones</span><h2>Web y Android</h2></div></div>
+      <div class="cabeza"><div><span class="num" data-es="Versiones">Versions</span><h2 data-es="Web y Android">Web and Android</h2></div></div>
       <div class="recursos">
         <article class="recurso">
           <div class="ilus">
@@ -99,11 +99,11 @@
             </svg>
           </div>
           <div>
-            <span class="estado">Prototipo de investigación</span>
-            <h3>Aplicación web</h3>
-            <p>Servidor con un ensamble de cinco modelos entrenados con validación cruzada estratificada en APTOS 2019. Muestra el grado, las probabilidades, el acuerdo entre modelos y los mapas de atención. La imagen se procesa en memoria y no se guarda.</p>
-            <div class="tags"><span>Ensamble de 5 modelos</span><span>Mapas de atención</span><span>Control de calidad de imagen</span></div>
-            <div class="botones"><a class="btn prim" href="../contacto.html">Solicitar una demostración →</a></div>
+            <span class="estado" data-es="Prototipo de investigación">Research prototype</span>
+            <h3 data-es="Aplicación web">Web application</h3>
+            <p data-es="Servidor con un ensamble de cinco modelos entrenados con validación cruzada estratificada en APTOS 2019. Muestra el grado, las probabilidades, el acuerdo entre modelos y los mapas de atención. La imagen se procesa en memoria y no se guarda.">A server with an ensemble of five models trained with stratified cross-validation on APTOS 2019. It shows the grade, the probabilities, the agreement between models, and the attention maps. The image is processed in memory and never stored.</p>
+            <div class="tags"><span data-es="Ensamble de 5 modelos">Ensemble of 5 models</span><span data-es="Mapas de atención">Attention maps</span><span data-es="Control de calidad de imagen">Image quality check</span></div>
+            <div class="botones"><a class="btn prim" href="../contacto.html" data-es="Solicitar una demostración →">Request a demo →</a></div>
           </div>
         </article>
         <article class="recurso">
@@ -117,16 +117,16 @@
             </svg>
           </div>
           <div>
-            <span class="estado">En desarrollo</span>
-            <h3>Aplicación Android</h3>
-            <p>El modelo se ejecuta en el propio teléfono con ONNX Runtime, sin conexión a internet: la retinografía nunca sale del dispositivo. El preprocesamiento reproduce exactamente el de la versión web.</p>
-            <div class="tags"><span>ONNX Runtime</span><span>Sin conexión</span><span>Privacidad</span></div>
+            <span class="estado" data-es="En desarrollo">In development</span>
+            <h3 data-es="Aplicación Android">Android app</h3>
+            <p data-es="El modelo se ejecuta en el propio teléfono con ONNX Runtime, sin conexión a internet: la retinografía nunca sale del dispositivo. El preprocesamiento reproduce exactamente el de la versión web.">The model runs on the phone itself with ONNX Runtime, with no internet connection: the fundus image never leaves the device. The preprocessing exactly matches the web version.</p>
+            <div class="tags"><span>ONNX Runtime</span><span data-es="Sin conexión">Offline</span><span data-es="Privacidad">Privacy</span></div>
           </div>
         </article>
       </div>
       <figure class="figura" style="margin-top:28px">
-        <a href="img/resultado.jpg" title="Ver la imagen en tamaño completo"><img src="img/resultado.jpg" width="1280" height="1030" loading="lazy" alt="Pantalla de resultados de la aplicación web con servidor: a la izquierda la retinografía analizada; a la derecha el grado 3, retinopatía diabética no proliferativa severa, con probabilidad de 63.9 %, retinopatía referible, cinco de cinco modelos de acuerdo, calidad de imagen adecuada y la probabilidad de cada grado."></a>
-        <figcaption>Aplicación web con servidor: el ensamble de cinco modelos muestra además el acuerdo entre ellos. Retinografía del conjunto de prueba de APTOS 2019; el grado estimado coincide con el real.</figcaption>
+        <a href="img/resultado.jpg" title="View the full-size image" data-es-title="Ver la imagen en tamaño completo"><img src="img/resultado.jpg" width="1280" height="1030" loading="lazy" alt="Results screen of the server-based web application (in Spanish): on the left, the analyzed fundus image; on the right, grade 3, severe non-proliferative diabetic retinopathy, with a probability of 63.9%, referable retinopathy, five of five models in agreement, adequate image quality, and the probability of each grade." data-es-alt="Pantalla de resultados de la aplicación web con servidor: a la izquierda la retinografía analizada; a la derecha el grado 3, retinopatía diabética no proliferativa severa, con probabilidad de 63.9 %, retinopatía referible, cinco de cinco modelos de acuerdo, calidad de imagen adecuada y la probabilidad de cada grado."></a>
+        <figcaption data-es="Aplicación web con servidor: el ensamble de cinco modelos muestra además el acuerdo entre ellos. Retinografía del conjunto de prueba de APTOS 2019; el grado estimado coincide con el real.">Server-based web application (in Spanish): the five-model ensemble also shows the agreement between models. Fundus image from the APTOS 2019 test set; the estimated grade matches the true grade.</figcaption>
       </figure>
     </div>
   </section>
@@ -134,8 +134,8 @@
   <section class="seccion">
     <div class="ancho">
       <div class="aviso-investigacion">
-        <p><b>Herramienta de investigación.</b> No constituye un diagnóstico médico ni sustituye la valoración de un oftalmólogo.</p>
-        <p>SABER-DR forma parte de la tesis doctoral <a href="../publicaciones.html#pub-TESIS2026">«Identificación automática de retinopatías utilizando imágenes del fondo de la retina y aprendizaje profundo»</a>, Doctorado en Ingeniería Eléctrica, Universidad de Guanajuato. Director: Dr. Juan Gabriel Aviña Cervantes; codirector: Dr. José Ruiz Pinales.</p>
+        <p data-es="&lt;b&gt;Herramienta de investigación.&lt;/b&gt; No constituye un diagnóstico médico ni sustituye la valoración de un oftalmólogo."><b>Research tool.</b> It is not a medical diagnosis and does not replace an ophthalmologist’s assessment.</p>
+        <p data-es="SABER-DR forma parte de la tesis doctoral &lt;a href=&quot;../publicaciones.html#pub-TESIS2026&quot;&gt;«Identificación automática de retinopatías utilizando imágenes del fondo de la retina y aprendizaje profundo»&lt;/a&gt;, Doctorado en Ingeniería Eléctrica, Universidad de Guanajuato. Director: Dr. Juan Gabriel Aviña Cervantes; codirector: Dr. José Ruiz Pinales.">SABER-DR is part of the doctoral thesis <a href="../publicaciones.html#pub-TESIS2026">“Automatic Identification of Retinopathies Using Fundus Images and Deep Learning”</a>, PhD in Electrical Engineering, Universidad de Guanajuato. Advisor: Dr. Juan Gabriel Aviña Cervantes; co-advisor: Dr. José Ruiz Pinales.</p>
       </div>
     </div>
   </section>
@@ -143,6 +143,7 @@
 
 <div id="pie"></div>
 <script src="../assets/js/datos.js"></script>
+<script src="../assets/js/datos-en.js"></script>
 <script src="../assets/js/sitio.js"></script>
 <script src="js/preprocesamiento.js"></script>
 <script src="js/modelo.js"></script>

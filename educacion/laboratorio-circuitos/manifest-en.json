@@ -1,0 +1,19 @@
+{
+  "id": "/educacion/laboratorio-circuitos/",
+  "name": "Circuits Lab",
+  "short_name": "Circuits Lab",
+  "description": "Guided practice in electric circuits: power, network reduction, nodal and mesh analysis, Thévenin, operational amplifiers, RC/RL, RLC, and phasors. Works offline. The exercises are in Spanish.",
+  "lang": "en",
+  "dir": "ltr",
+  "start_url": "./?lang=en",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f7fb",
+  "theme_color": "#0a0f1e",
+  "categories": ["education"],
+  "icons": [
+    { "src": "iconos/icono-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "iconos/icono-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "iconos/icono-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

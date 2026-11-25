@@ -167,7 +167,7 @@
     proyectos: [
       { titulo: "SABER-DR Web", texto: "Grades diabetic retinopathy on a five-level scale. Try it in your browser: the image never leaves your device.", etiqueta: "Software", enlace: "saber-dr/index.html" },
       { titulo: "SABER-DR Android", texto: "On-device classification with ONNX, with no internet connection needed.", etiqueta: "Software", enlace: "saber-dr/index.html#versiones" },
-      { titulo: "Convolutional filters", texto: "Upload an image and see the 16 feature maps produced by a convolutional layer with 3×3 filters.", etiqueta: "Demo", enlace: "convolucion/index.html" },
+      { titulo: "Convolutional filters", texto: "Upload an image and see the 16 feature maps produced by a convolutional layer with 3×3 or 5×5 filters and ReLU or GELU activation.", etiqueta: "Demo", enlace: "convolucion/index.html" },
       { titulo: "Circuits Lab", texto: "Guided practice in electric circuits, from power and nodal/mesh analysis to RLC circuits and phasors, for Android and the web (in Spanish).", etiqueta: "Teaching", enlace: "educacion/laboratorio-circuitos/index.html" }
     ],
 

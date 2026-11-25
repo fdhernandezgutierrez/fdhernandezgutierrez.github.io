@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title data-es="Filtros convolucionales · Fernando D. Hernández">Convolutional Filters · Fernando D. Hernández</title>
-<meta name="description" content="Upload an image and see the 16 feature maps produced by a convolutional layer with 3×3 filters." data-es-content="Suba una imagen y vea los 16 mapas de características que produce una capa convolucional con filtros de 3×3.">
+<meta name="description" content="Upload an image and see the 16 feature maps produced by a convolutional layer with 3×3 or 5×5 filters and ReLU or GELU activation." data-es-content="Suba una imagen y vea los 16 mapas de características que produce una capa convolucional con filtros de 3×3 o 5×5 y activación ReLU o GELU.">
 <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,7 +20,7 @@
   <div class="ancho">
     <p class="sobretitulo" data-es="Demostración">Demo</p>
     <h1 data-es="Filtros convolucionales">Convolutional filters</h1>
-    <p data-es="Una capa convolucional aplica varios filtros a la misma imagen; cada uno produce un mapa de características. Aquí son 16 filtros de 3 × 3.">A convolutional layer applies several filters to the same image, and each one produces a feature map. Here there are 16 filters of size 3 × 3.</p>
+    <p data-es="Una capa convolucional aplica varios filtros a la misma imagen; cada uno produce un mapa de características. Aquí son 16 filtros de 3 × 3 o de 5 × 5, seguidos de una función de activación.">A convolutional layer applies several filters to the same image, and each one produces a feature map. Here there are 16 filters of size 3 × 3 or 5 × 5, followed by an activation function.</p>
   </div>
 </header>
 
@@ -37,7 +37,17 @@
               <button type="button" class="btn claro" id="ejemplo" data-es="Usar ejemplo">Use example</button>
             </div>
             <input type="file" id="archivo" accept="image/*" hidden>
-            <label class="conv-opcion"><input type="checkbox" id="relu" checked> <span data-es="Aplicar ReLU (solo valores positivos)">Apply ReLU (positive values only)</span></label>
+            <fieldset class="conv-grupo">
+              <legend data-es="Tamaño del filtro">Filter size</legend>
+              <label><input type="radio" name="tamano" value="3" checked> 3×3</label>
+              <label><input type="radio" name="tamano" value="5"> 5×5</label>
+            </fieldset>
+            <fieldset class="conv-grupo">
+              <legend data-es="Activación">Activation</legend>
+              <label><input type="radio" name="activacion" value="ninguna"> <span data-es="Ninguna">None</span></label>
+              <label><input type="radio" name="activacion" value="relu" checked> ReLU</label>
+              <label><input type="radio" name="activacion" value="gelu"> GELU</label>
+            </fieldset>
             <p class="conv-dato" id="dato"></p>
           </div>
 
@@ -47,8 +57,9 @@
               <li data-es="Suba una imagen (JPG o PNG) o use el ejemplo.">Upload an image (JPG or PNG) or use the example.</li>
               <li data-es="La imagen se pasa a escala de grises y se reduce a 256 píxeles por lado.">The image is converted to grayscale and reduced to 256 pixels per side.</li>
               <li data-es="Cada uno de los 16 filtros recorre la imagen y da un mapa de características. Las zonas claras son donde el filtro responde más.">Each of the 16 filters slides over the image and gives a feature map. Bright areas are where the filter responds most.</li>
+              <li data-es="Elija el tamaño del filtro: 3×3 mira a los vecinos inmediatos; 5×5 abarca una zona más grande, así que detecta bordes más gruesos y con menos ruido.">Choose the filter size: 3×3 looks at the immediate neighbors; 5×5 covers a larger area, so it detects thicker edges with less noise.</li>
+              <li data-es="Elija la activación: ReLU deja solo los valores positivos (lo negativo queda en negro); GELU es más suave y deja pasar un poco de los negativos cercanos a cero; «Ninguna» muestra el resultado tal cual (gris medio = cero).">Choose the activation: ReLU keeps only the positive values (negatives become black); GELU is smoother and lets a little of the near-zero negatives through; “None” shows the raw result (mid-gray = zero).</li>
               <li data-es="Toque un mapa para verlo en grande junto con los valores de su filtro.">Tap a map to see it enlarged along with its filter values.</li>
-              <li data-es="Quite ReLU para ver también las respuestas negativas (gris medio = cero).">Turn off ReLU to also see the negative responses (mid-gray = zero).</li>
             </ol>
             <p class="nota" data-es="La imagen se procesa en su navegador; no se envía a ningún lado.">The image is processed in your browser; it is not sent anywhere.</p>
           </div>
@@ -57,7 +68,7 @@
         <div class="conv-salida">
           <div class="conv-panel">
             <h3 data-es="16 mapas de características">16 feature maps</h3>
-            <p class="conv-capa">Conv2D · 1 → 16 · 3×3 · stride 1 · padding 1</p>
+            <p class="conv-capa" id="capa">Conv2D · 1 → 16 · 3×3 · stride 1 · padding 1 · ReLU</p>
             <div class="conv-mapas" id="mapas"></div>
           </div>
         </div>

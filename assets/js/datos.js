@@ -243,7 +243,7 @@ window.PERFIL = {
   proyectos: [
     { titulo: "SABER-DR Web", texto: "Gradúa la retinopatía diabética en cinco grados. Pruébela en el navegador: la imagen no sale de su equipo.", etiqueta: "Software", enlace: "saber-dr/index.html" },
     { titulo: "SABER-DR Android", texto: "Clasificación en el teléfono con ONNX, sin conexión a internet.", etiqueta: "Software", enlace: "saber-dr/index.html#versiones" },
-    { titulo: "Filtros convolucionales", texto: "Suba una imagen y vea los 16 mapas de características que produce una capa convolucional con filtros de 3×3.", etiqueta: "Demostración", enlace: "convolucion/index.html" },
+    { titulo: "Filtros convolucionales", texto: "Suba una imagen y vea los 16 mapas de características que produce una capa convolucional con filtros de 3×3 o 5×5 y activación ReLU o GELU.", etiqueta: "Demostración", enlace: "convolucion/index.html" },
     { titulo: "Laboratorio de Circuitos", texto: "Práctica guiada de circuitos eléctricos, de la potencia y los nodos y mallas a los circuitos RLC y los fasores, para Android y en el navegador.", etiqueta: "Docencia", enlace: "educacion/laboratorio-circuitos/index.html" }
   ],
 

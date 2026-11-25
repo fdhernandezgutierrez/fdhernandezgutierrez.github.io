@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-es="Filtros convolucionales · Fernando D. Hernández">Convolutional Filters · Fernando D. Hernández</title>
+<meta name="description" content="Upload an image and see the 16 feature maps produced by a convolutional layer with 3×3 filters." data-es-content="Suba una imagen y vea los 16 mapas de características que produce una capa convolucional con filtros de 3×3.">
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/estilos.css">
+<link rel="stylesheet" href="convolucion.css">
+</head>
+<body data-pagina="convolucion" data-menu="proyectos" data-raiz="../">
+<a class="saltar" href="#contenido" data-es="Saltar al contenido">Skip to content</a>
+<div id="barra"></div>
+
+<header class="cabecera-pagina">
+  <div class="ancho">
+    <p class="sobretitulo" data-es="Demostración">Demo</p>
+    <h1 data-es="Filtros convolucionales">Convolutional filters</h1>
+    <p data-es="Una capa convolucional aplica varios filtros a la misma imagen; cada uno produce un mapa de características. Aquí son 16 filtros de 3 × 3.">A convolutional layer applies several filters to the same image, and each one produces a feature map. Here there are 16 filters of size 3 × 3.</p>
+  </div>
+</header>
+
+<main id="contenido">
+  <section class="seccion primera">
+    <div class="ancho">
+      <div class="conv">
+        <div class="conv-entrada">
+          <div class="conv-panel">
+            <h3 data-es="Imagen de entrada">Input image</h3>
+            <canvas id="entrada" width="256" height="256" aria-label="Input image in grayscale" data-es-aria-label="Imagen de entrada en escala de grises"></canvas>
+            <div class="botones">
+              <label class="btn prim" for="archivo" data-es="Subir imagen">Upload image</label>
+              <button type="button" class="btn claro" id="ejemplo" data-es="Usar ejemplo">Use example</button>
+            </div>
+            <input type="file" id="archivo" accept="image/*" hidden>
+            <label class="conv-opcion"><input type="checkbox" id="relu" checked> <span data-es="Aplicar ReLU (solo valores positivos)">Apply ReLU (positive values only)</span></label>
+            <p class="conv-dato" id="dato"></p>
+          </div>
+
+          <div class="conv-panel conv-ayuda">
+            <h3 data-es="Cómo usarlo">How to use it</h3>
+            <ol>
+              <li data-es="Suba una imagen (JPG o PNG) o use el ejemplo.">Upload an image (JPG or PNG) or use the example.</li>
+              <li data-es="La imagen se pasa a escala de grises y se reduce a 256 píxeles por lado.">The image is converted to grayscale and reduced to 256 pixels per side.</li>
+              <li data-es="Cada uno de los 16 filtros recorre la imagen y da un mapa de características. Las zonas claras son donde el filtro responde más.">Each of the 16 filters slides over the image and gives a feature map. Bright areas are where the filter responds most.</li>
+              <li data-es="Toque un mapa para verlo en grande junto con los valores de su filtro.">Tap a map to see it enlarged along with its filter values.</li>
+              <li data-es="Quite ReLU para ver también las respuestas negativas (gris medio = cero).">Turn off ReLU to also see the negative responses (mid-gray = zero).</li>
+            </ol>
+            <p class="nota" data-es="La imagen se procesa en su navegador; no se envía a ningún lado.">The image is processed in your browser; it is not sent anywhere.</p>
+          </div>
+        </div>
+
+        <div class="conv-salida">
+          <div class="conv-panel">
+            <h3 data-es="16 mapas de características">16 feature maps</h3>
+            <p class="conv-capa">Conv2D · 1 → 16 · 3×3 · stride 1 · padding 1</p>
+            <div class="conv-mapas" id="mapas"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<dialog class="conv-detalle" id="detalle">
+  <form method="dialog"><button class="conv-cerrar" aria-label="Close" data-es-aria-label="Cerrar">×</button></form>
+  <h3 id="detalle-titulo"></h3>
+  <div class="conv-detalle-cuerpo">
+    <canvas id="detalle-mapa" width="256" height="256"></canvas>
+    <div>
+      <p class="conv-dato" data-es="Valores del filtro">Filter values</p>
+      <div class="conv-kernel grande" id="detalle-kernel"></div>
+      <p class="conv-dato" id="detalle-texto"></p>
+    </div>
+  </div>
+</dialog>
+
+<div id="pie"></div>
+<script src="../assets/js/datos.js"></script>
+<script src="../assets/js/datos-en.js"></script>
+<script src="../assets/js/sitio.js"></script>
+<script src="convolucion.js"></script>
+</body>
+</html>
